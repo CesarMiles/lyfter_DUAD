@@ -37,10 +37,25 @@ def student_information_with_grade_average(student_info):
     student_full_info['Average grade'] = student_average_grade(student_info)
     return student_full_info
 
+# Function to generate general average among students 
+def all_student_average(student_list):
+    if not student_list:
+        return 0.0
+    all_student_average = []
+    for student in student_list:
+        all_student_average.append(student['Average grade'])
+    
+    total_average = sum(all_student_average) / len(all_student_average)
+    return round(total_average, 2)
 
+# Function to get student average for sorting
+def get_student_average(student):
+    return student['Average grade']
 
-
-
-
-
-
+# Function to get top three students
+def get_top_three_students(student_list):
+    if not student_list:
+        return []
+    
+    sorted_students = sorted(student_list, key = get_student_average, reverse = True)
+    return sorted_students[:3]

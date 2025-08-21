@@ -1,4 +1,4 @@
-from actions import option_one_adding_student_information, student_average_grade, student_information_with_grade_average
+from actions import option_one_adding_student_information, student_average_grade, student_information_with_grade_average, all_student_average, get_top_three_students, get_student_average
 
 # Function to display the menu. No input request.
 def menu_display():
@@ -24,12 +24,38 @@ def user_menu_interaction():
     while menu_running:
         try:
             user_menu_selection = int(input('Ingrese una opcion del menu: '))
-            if user_menu_selection == 1:
+            if user_menu_selection not in range(1, 8):
+                print('Por favor ingrese un numero entre 1 y 7')
+                continue
+
+            elif user_menu_selection == 1:
                 student_list.append(menu_action_option_one())
                 print('Estudiante agregado correctamente')
 
             elif user_menu_selection == 2:
-                print(f'Lista de Estudiantes: {student_list}') 
+                if student_list:
+                    print(f'Lista de Estudiantes:') 
+                    for student in student_list:
+                        print(student)
+                else:
+                    print(f'No hay estudiantes en la base de datos.')
+            
+            elif user_menu_selection == 3:
+                top_students = get_top_three_students(student_list)
+                if top_students:
+                    print(f'Top 3 de estudiantes:')
+                    for i, student in enumerate(top_students, 1):
+                        print(f'{i}. {student['full name']} - Promedio: {student['Average grade']}')
+                else:
+                    print(f'No hay estudiantes en la base de datos.')
+
+            
+            elif user_menu_selection == 4:
+                if student_list:
+                    general_average = all_student_average(student_list)
+                    print(f'El promedio general de la lista es {general_average}')
+                else:
+                    print(f'No hay estudiantes en la base de datos.')
 
             elif user_menu_selection == 7:
                 print('Gracias por usar el sitema. Cerrando programa.')
