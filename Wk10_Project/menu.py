@@ -1,4 +1,5 @@
 from actions import option_one_adding_student_information, student_average_grade, student_information_with_grade_average, all_student_average, get_top_three_students, get_student_average
+from data import student_list_csv_file, function_to_open_student_list_csv
 
 # Function to display the menu. No input request.
 def menu_display():
@@ -48,7 +49,6 @@ def user_menu_interaction():
                         print(f'{i}. {student['full name']} - Promedio: {student['Average grade']}')
                 else:
                     print(f'No hay estudiantes en la base de datos.')
-
             
             elif user_menu_selection == 4:
                 if student_list:
@@ -56,6 +56,20 @@ def user_menu_interaction():
                     print(f'El promedio general de la lista es {general_average}')
                 else:
                     print(f'No hay estudiantes en la base de datos.')
+            
+            elif user_menu_selection == 5:
+                try:
+                    student_list_csv_file('Student List.csv', student_list, student_list[0].keys())
+                except IndexError:
+                    print(f'No se puede crear el archivo CSV por que no hay data')
+            
+            elif user_menu_selection == 6:
+                imported_student_list = function_to_open_student_list_csv('Student List.csv')
+                if imported_student_list:
+                    student_list = imported_student_list
+                    print(f'Datos importados correctamente')
+                else:
+                    print(f'No se pudieron importar los datos')
 
             elif user_menu_selection == 7:
                 print('Gracias por usar el sitema. Cerrando programa.')
