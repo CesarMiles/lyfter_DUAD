@@ -3,7 +3,7 @@ from data import student_list_csv_file, function_to_open_student_list_csv
 
 # Function to display the menu. No input request.
 def menu_display():
-    print ('''Bienvenido al programa de Control de Estudiantes, por favor lea el menu. 
+    print ('''Menu de opciones:
         1. Si desea ingresar informacion de estudiantes a la base de datos, ingrese 1. 
         2. Si desea ver la informacion actual de estudiantes de la base de datos, ingrese 2. 
         3. Si desea ver los mejores tres promedios de los estudiantes, ingrese 3. 
@@ -20,9 +20,11 @@ def menu_action_option_one():
 
 # Function to gather user input and start loop of options. 
 def user_menu_interaction():
+    print(f'Bienvenido al programa de Control de Estudiantes.')
     menu_running = True
     student_list = []
     while menu_running:
+        menu_display()
         try:
             user_menu_selection = int(input('Ingrese una opcion del menu: '))
             if user_menu_selection not in range(1, 8):
