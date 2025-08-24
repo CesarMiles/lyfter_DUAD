@@ -17,8 +17,13 @@ class Student:
             'full name' : self.full_name,
             'Section' : self.section,
             'Spanish grade' : self.spanish_grade,
-            'English_grade' : self.english_grade,
+            'English grade' : self.english_grade,
             'Socials grade' : self.socials_grade,
             'Science grade' : self.science_grade,
             'Average grade' : self.average_grade
         }
+    
+    def __str__(self):
+        return (f"Estudiante: {self.full_name} "
+                f"(Sección: {self.section}) - "
+                f"Promedio: {self.average_grade:.2f}")

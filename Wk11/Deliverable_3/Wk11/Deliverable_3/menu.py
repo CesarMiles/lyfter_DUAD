@@ -42,7 +42,7 @@ def user_menu_interaction():
                 if top_students:
                     print(f'Top 3 de estudiantes:')
                     for i, student in enumerate(top_students, 1):
-                        print(f'{i}. {student['full name']} - Promedio: {student.average_grade}')
+                        print(f'{i}. {student.full_name} - Promedio: {student.average_grade}')
                 else:
                     print(f'No hay estudiantes en la base de datos.')
             
@@ -55,7 +55,7 @@ def user_menu_interaction():
             
             elif user_menu_selection == 5:
                 try:
-                    student_list_csv_file('Student List.csv', student_list, student_list[0].keys())
+                    student_list_csv_file('Student List.csv', student_list)
                 except IndexError:
                     print(f'No se puede crear el archivo CSV por que no hay data')
             
