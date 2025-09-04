@@ -1,3 +1,4 @@
+# Class to create node objects to be used on stack.
 class Node:
     data: str
     next: "Node"
@@ -9,13 +10,14 @@ class Node:
     def __str__(self):
         return f'{self.data} Node'
 
-
+#Class to create Stack 
 class Stack:
     head: Node
 
     def __init__(self):
         self.head = None
 
+    # Function to print status of the Stack
     def print_structure(self):
         current_node = self.head
 
