@@ -20,6 +20,8 @@ class Stack:
     # Function to print status of the Stack
     def print_structure(self):
         current_node = self.head
+        if current_node is None:
+            print(f'The stack is empty')
 
         while current_node is not None:
             print(current_node.data)
@@ -32,12 +34,13 @@ class Stack:
         
 
     def pop(self):
-        if self.head.next is None:
+        if self.head is None:
             raise Exception('Stack is empty')
         
         popped_node = self.head
         self.head = self.head.next
         popped_node.next = None
+        print(f'Removing {popped_node}')
         return popped_node
 
 stack = Stack()
@@ -50,6 +53,8 @@ print('Stack Full')
 stack.print_structure()
 
 print('Last in first out')
-popped = stack.pop()
+stack.pop()
+stack.pop()
+stack.pop()
 
 stack.print_structure()
