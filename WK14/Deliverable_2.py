@@ -22,6 +22,8 @@ class DoubleEndedQueue:
     # Function to print status of the Double Ended Queue
     def print_structure(self):
         current_node = self.head
+        if current_node is None:
+            print(f'The queue is empty')
 
         while current_node is not None:
             print(current_node.data)
@@ -58,7 +60,7 @@ class DoubleEndedQueue:
         popped_node = self.tail
         self.tail = current
         self.tail.next = None
-        print(f'Removing {popped_node}')
+        print(f'Removing {popped_node} from the right')
         return popped_node
 
     #Function to add items to the left side of the queue 
@@ -73,7 +75,7 @@ class DoubleEndedQueue:
 
     #Function to remove items to the left side of the queue 
     def pop_left(self):
-        if self.head.next is None:
+        if self.head is None:
             raise Exception('Queue is empty')
         
         popped_node = self.head
@@ -82,13 +84,14 @@ class DoubleEndedQueue:
             self.tail = None
 
         popped_node.next = None
-        print(f'Removing {popped_node}')
+        print(f'Removing {popped_node} from the left')
         return popped_node
 
 
-#Testing Enviorment 
+#Test Enviorment 
 queue = DoubleEndedQueue()
-#Texting Right features pushing and popping
+
+#Testing Right features pushing and popping
 queue.push_right(Node('First'))
 queue.push_right(Node('Second'))
 print('Queue Full')
