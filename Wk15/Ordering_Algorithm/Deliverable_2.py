@@ -1,4 +1,4 @@
-#Function for sorting list using 'bubbles_sort' algorithm
+#Function for sorting list using 'bubbles_sort' algorithm from right to left
 def bubble_sort(list_to_sort):
   for outer_index in range(len(list_to_sort)-1):
     has_made_changes = False
