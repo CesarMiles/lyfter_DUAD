@@ -1,3 +1,4 @@
+import pytest
 from bubble_sort import bubble_sort
 
 # Test for small list with only 2 elements 
@@ -27,4 +28,12 @@ def test_bubble_sort_with_empty_list():
     # Act
     result = bubble_sort(empty_list)
     # Assert
-    assert result
+    assert result == []
+
+# Test for a string in the list 
+def test_bubble_sort_with_string_in_list():
+    # Arrange
+    input_list = 'Hello'
+    # Act
+    with pytest.raises(TypeError):
+        bubble_sort(input_list)
