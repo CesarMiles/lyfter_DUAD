@@ -13,7 +13,8 @@ def is_prime(n):
     return True
 
 
-numbers_list = [1, 4, 6, 7, 13, 9, 67]
-prime_list = [num for num in numbers_list if is_prime(num)]
+if __name__ == '__main__':
+    numbers_list = [1, 4, 6, 7, 13, 9, 67]
+    prime_list = [num for num in numbers_list if is_prime(num)]
 
-print(f'Numeros primos en la lista: {prime_list}')
+    print(f'Numeros primos en la lista: {prime_list}')

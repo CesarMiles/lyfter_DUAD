@@ -11,6 +11,7 @@ def sentence_separator(sentence):
     function_list.sort()
     return function_list
 
-sentence = sentence_taker()
-new_list = sentence_separator(sentence)
-print(new_list)
+if __name__ == '__main__':
+    sentence = sentence_taker()
+    new_list = sentence_separator(sentence)
+    print(new_list)
