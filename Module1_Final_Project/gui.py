@@ -1,21 +1,20 @@
 import FreeSimpleGUI as sg
-from fianance_manager import Category
+from fianance_manager import Category, MoneyTransaction
 
-def main_window(transaction_category_list):
+def main_window(full_transaction_list):
     sg.theme('Dark Purple 7')
-    layout = [[sg.Text('           '), sg.Text('Transaction Table', font=('bold'))],
-              [sg.Text('           '), sg.Table([[transaction_category_list]], headings=['Category', 'Type', 'Title', 'Amount'], key='-TABLE-')],
+    layout = [[sg.Text('Transaction Table', font=('bold'))],
+              [sg.Table([[full_transaction_list]], justification='center', headings=['Category', 'Type', 'Title', 'Amount'], key='-TABLE-', auto_size_columns=False, expand_x=True, expand_y=True),],
               [sg.Button('Add transaction category'), sg.Button('Add expense'), sg.Button('Add income')]]
-    return sg.Window('Finance Manager', layout, location=(800,600), finalize=True)
+    return sg.Window('Finance Manager', layout, resizable=True, finalize=True)
 
 
 def add_category_transaction_window(main_win, transaction_category_list):
     layout = [[sg.Text('Please add the category to be included on the table')],
-              [sg.Input(key='-CATEGORY-', enable_events=True)],
+              [sg.Input(key='-CATEGORY-')],
               [sg.Button('Submit'), sg.Button('Cancel')]]
     # creating Window for Category Transaction
     add_category_win = sg.Window('Add Transaction Category', layout, finalize=True)
-    
     
     # Category window event loop
     while True:
@@ -27,58 +26,81 @@ def add_category_transaction_window(main_win, transaction_category_list):
             if category_name:
                 new_category = Category(category_name)
                 transaction_category_list.append(str(new_category))
-                main_win['-TABLE-'].update(transaction_category_list)
+                break
+
     add_category_win.close()
 
-def add_expense_window():
-    layout = [[sg.Text('Please add expense to be included on the table')],
-              [sg.Text('Category'), sg.Input(key='-CATEGORY-', enable_events=True), sg.Text('Type: '), sg.Text('expense', background_color='RoyalBlue4', key='-TYPE-'), sg.Text('Title'), sg.Input(key='-TITLE-', enable_events=True), sg.Text('Amount'), sg.Input(key='-AMOUNT-', enable_events=True)],
+def add_expense_window(main_win, transaction_category_list, full_transaction_list):
+    layout = [[sg.Text('Please add expense to be included on the table. Please note that the type for this entry will be expense.')],
+              [sg.Text('Category'), sg.Combo(transaction_category_list, default_value=transaction_category_list[0], readonly=True, key='-CATEGORY-', enable_events=True), sg.Text('Title'), sg.Input(key='-TITLE-', enable_events=True), sg.Text('Amount'), sg.Input(key='-AMOUNT-', enable_events=True)],
               [sg.Button('Submit'), sg.Button('Cancel')]]
-    return sg.Window('Add Expense', layout, finalize=True)
+    # creating window for expense transaction entry
+    add_expense_win = sg.Window('Add Expense', layout, finalize=True)
 
-def add_income_window():
-    layout = [[sg.Text('Please add income to be included on the table')],
-              [sg.Text('Category'), sg.Input(key='-CATEGORY-', enable_events=True), sg.Text('Type: '), sg.Text('Expense', background_color='RoyalBlue4', key='-TYPE-'), sg.Text('Title'), sg.Input(key='-TITLE-', enable_events=True), sg.Text('Amount'), sg.Input(key='-AMOUNT-', enable_events=True)],
+    # Expense window event loop
+    while True:
+        event, values = add_expense_win.read()
+        if event == sg.WIN_CLOSED or event == 'Cancel':
+            break
+        elif event == 'Submit':
+            transaction_category = values['-CATEGORY-'].strip()
+            transaction_type = 'expense'
+            transaction_title = values['-TITLE-'].strip()
+            transaction_amount = values['-AMOUNT-']
+            full_transaction_list.append(MoneyTransaction(transaction_category, transaction_type, transaction_title, transaction_amount))
+            main_win['-TABLE-'].update(full_transaction_list)
+            break
+    add_expense_win.close()
+
+def add_income_window(main_win, transaction_category_list, full_transaction_list):
+    layout = [[sg.Text('Please add income to be included on the table. Please note that the type for this entry will be income.')],
+              [sg.Text('Category'), sg.Combo(transaction_category_list, default_value=transaction_category_list[0], readonly=True, key='-CATEGORY-', enable_events=True), sg.Text('Title'), sg.Input(key='-TITLE-', enable_events=True), sg.Text('Amount'), sg.Input(key='-AMOUNT-', enable_events=True)],
               [sg.Button('Submit'), sg.Button('Cancel')]]
-    return sg.Window('Add Income', layout, finalize=True)
+    # creating window for income transaction entry
+    add_income_win = sg.Window('Add Income', layout, finalize=True)
 
+    # Income window event loop
+    while True:
+        event, values = add_income_win.read()
+        if event == sg.WIN_CLOSED or event == 'Cancel':
+            break
+        elif event == 'Submit':
+            transaction_category = values['-CATEGORY-'].strip()
+            transaction_type = 'income'
+            transaction_title = values['-TITLE-'].strip()
+            transaction_amount = values['-AMOUNT-']
+            full_transaction_list.append(MoneyTransaction(transaction_category, transaction_type, transaction_title, transaction_amount))
+            main_win['-TABLE-'].update(full_transaction_list)
+            break
+    add_income_win.close()
 
 
 def main():
     transaction_category_list = [] 
-    main_win = main_window(transaction_category_list) 
-    add_expense, add_income = None, None
+    full_transaction_list = []
+    main_win = main_window(full_transaction_list) 
 
     while True:             # Event Loop
-        window, event, values = sg.read_all_windows()
-        if event == sg.WIN_CLOSED or event == 'Cancel':
-            window.close()
-            if window == add_category:      
-                add_category = None
-            elif window == add_expense:
-                add_expense = None
-            elif window == add_income:
-                add_income = None
-            elif window == main:    
+        event, values = main_win.read()
+        # Closing conditions
+        if event == sg.WIN_CLOSED:  
                 break
-
+        
+        # Windows loop
         elif event == 'Add transaction category':
-            add_category = add_category_transaction_window(main_win, transaction_category_list)
-        elif event == 'Add expense' and not add_category and not add_expense and not add_income:
-            add_expense = add_expense_window()
-        elif event == 'Add income' and not add_category and not add_expense and not add_income:
-            add_income = add_income_window()
-        # elif event == 'Submit':
-        #     if window == add_category:
-        #         category_name = values['-CATEGORY-'].strip()
-        #         if category_name:
-        #             new_category = Category(category_name)
-        #             transaction_category_list.append(str(new_category))
-        #             main_win['-TABLE-'].update(transaction_category_list)
-    #     elif event == 'Erase': #Pending to add Submit FUnction
-    #         window['-OUTPUT-'].update('')
-    #         window['-IN-'].update('')
-    window.close()
+            add_category_transaction_window(main_win, transaction_category_list)
+        elif event == 'Add expense':
+            if not transaction_category_list: 
+                sg.popup('Please enter a category before adding expense')
+            else:
+                add_expense_window(main_win, transaction_category_list, full_transaction_list)
+        elif event == 'Add income':
+            if not transaction_category_list:
+                sg.popup('Please enter a category before adding income')
+            else:
+                add_income_window(main_win, transaction_category_list, full_transaction_list)
+
+    main_win.close()
 
 if __name__ == '__main__':
     main()
