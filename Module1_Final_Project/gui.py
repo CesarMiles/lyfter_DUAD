@@ -48,14 +48,17 @@ def add_expense_window(main_win, transaction_category_list, full_transaction_lis
         if event == sg.WIN_CLOSED or event == 'Cancel':
             break
         elif event == 'Submit':
-            transaction_category = values['-CATEGORY-'].strip()
-            transaction_type = 'expense'
-            transaction_title = values['-TITLE-'].strip()
-            transaction_amount = values['-AMOUNT-']
-            full_transaction_list.append(MoneyTransaction(transaction_category, transaction_type, transaction_title, transaction_amount))
-            new_transactions_for_table = objects_to_table_data(full_transaction_list)
-            main_win['-TABLE-'].update(new_transactions_for_table)
-            break
+            try:
+                transaction_category = values['-CATEGORY-'].strip()
+                transaction_type = 'expense'
+                transaction_title = values['-TITLE-'].strip()
+                transaction_amount = values['-AMOUNT-']
+                full_transaction_list.append(MoneyTransaction(transaction_category, transaction_type, transaction_title, transaction_amount))
+                new_transactions_for_table = objects_to_table_data(full_transaction_list)
+                main_win['-TABLE-'].update(new_transactions_for_table)
+                break
+            except ValueError as error:
+                sg.popup(f'Amount must be a number: {error}')
     add_expense_win.close()
 
 def add_income_window(main_win, transaction_category_list, full_transaction_list):
@@ -71,14 +74,17 @@ def add_income_window(main_win, transaction_category_list, full_transaction_list
         if event == sg.WIN_CLOSED or event == 'Cancel':
             break
         elif event == 'Submit':
-            transaction_category = values['-CATEGORY-'].strip()
-            transaction_type = 'income'
-            transaction_title = values['-TITLE-'].strip()
-            transaction_amount = values['-AMOUNT-']
-            full_transaction_list.append(MoneyTransaction(transaction_category, transaction_type, transaction_title, transaction_amount))
-            new_transactions_for_table = objects_to_table_data(full_transaction_list)
-            main_win['-TABLE-'].update(new_transactions_for_table)
-            break
+            try:
+                transaction_category = values['-CATEGORY-'].strip()
+                transaction_type = 'income'
+                transaction_title = values['-TITLE-'].strip()
+                transaction_amount = values['-AMOUNT-']
+                full_transaction_list.append(MoneyTransaction(transaction_category, transaction_type, transaction_title, transaction_amount))
+                new_transactions_for_table = objects_to_table_data(full_transaction_list)
+                main_win['-TABLE-'].update(new_transactions_for_table)
+                break
+            except ValueError as error:
+                sg.popup(f'Amount must be a number: {error}')
     add_income_win.close()
 
 
@@ -117,5 +123,3 @@ def main():
 
     main_win.close()
 
-if __name__ == '__main__':
-    main()
