@@ -1,11 +1,12 @@
 import FreeSimpleGUI as sg
 from fianance_manager import Category, MoneyTransaction
+from data_persistance import transaction_list_csv_file, csv_file_to_transaction_object, objects_to_table_data, update_category_list_based_on_previous_data
 
-def main_window(full_transaction_list):
+def main_window(table_data):
     sg.theme('Dark Purple 7')
     layout = [[sg.Text('Transaction Table', font=('bold'))],
-              [sg.Table([[full_transaction_list]], justification='center', headings=['Category', 'Type', 'Title', 'Amount'], key='-TABLE-', auto_size_columns=False, expand_x=True, expand_y=True),],
-              [sg.Button('Add transaction category'), sg.Button('Add expense'), sg.Button('Add income')]]
+              [sg.Table(table_data, justification='center', headings=['Category', 'Type', 'Title', 'Amount'], key='-TABLE-', auto_size_columns=False, expand_x=True, expand_y=True),],
+              [sg.Button('Add transaction category'), sg.Button('Add expense'), sg.Button('Add income'), sg.Button('Quit')]]
     return sg.Window('Finance Manager', layout, resizable=True, finalize=True)
 
 
@@ -25,8 +26,12 @@ def add_category_transaction_window(main_win, transaction_category_list):
             category_name = values['-CATEGORY-'].strip()
             if category_name:
                 new_category = Category(category_name)
-                transaction_category_list.append(str(new_category))
-                break
+                if str(new_category) not in transaction_category_list:
+                    transaction_category_list.append(str(new_category))
+                    break
+                else:
+                    sg.popup('The category is already on the list')
+                    break
 
     add_category_win.close()
 
@@ -48,7 +53,8 @@ def add_expense_window(main_win, transaction_category_list, full_transaction_lis
             transaction_title = values['-TITLE-'].strip()
             transaction_amount = values['-AMOUNT-']
             full_transaction_list.append(MoneyTransaction(transaction_category, transaction_type, transaction_title, transaction_amount))
-            main_win['-TABLE-'].update(full_transaction_list)
+            new_transactions_for_table = objects_to_table_data(full_transaction_list)
+            main_win['-TABLE-'].update(new_transactions_for_table)
             break
     add_expense_win.close()
 
@@ -70,20 +76,27 @@ def add_income_window(main_win, transaction_category_list, full_transaction_list
             transaction_title = values['-TITLE-'].strip()
             transaction_amount = values['-AMOUNT-']
             full_transaction_list.append(MoneyTransaction(transaction_category, transaction_type, transaction_title, transaction_amount))
-            main_win['-TABLE-'].update(full_transaction_list)
+            new_transactions_for_table = objects_to_table_data(full_transaction_list)
+            main_win['-TABLE-'].update(new_transactions_for_table)
             break
     add_income_win.close()
 
 
 def main():
-    transaction_category_list = [] 
     full_transaction_list = []
-    main_win = main_window(full_transaction_list) 
+    csv_file_to_transaction_object(full_transaction_list)
+    table_data = objects_to_table_data(full_transaction_list)
+    transaction_category_list = []
+    if full_transaction_list:
+        update_category_list_based_on_previous_data(table_data, transaction_category_list)
+
+
+    main_win = main_window(table_data) 
 
     while True:             # Event Loop
         event, values = main_win.read()
         # Closing conditions
-        if event == sg.WIN_CLOSED:  
+        if event == sg.WIN_CLOSED or event == 'Quit':  
                 break
         
         # Windows loop
@@ -94,11 +107,13 @@ def main():
                 sg.popup('Please enter a category before adding expense')
             else:
                 add_expense_window(main_win, transaction_category_list, full_transaction_list)
+                transaction_list_csv_file(full_transaction_list)
         elif event == 'Add income':
             if not transaction_category_list:
                 sg.popup('Please enter a category before adding income')
             else:
                 add_income_window(main_win, transaction_category_list, full_transaction_list)
+                transaction_list_csv_file(full_transaction_list)
 
     main_win.close()
 
