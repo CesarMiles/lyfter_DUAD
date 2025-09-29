@@ -1,5 +1,5 @@
 import FreeSimpleGUI as sg
-from fianance_manager import Category, MoneyTransaction
+from fianance_manager import Category, MoneyTransaction, data_validation
 from data_persistance import transaction_list_csv_file, csv_file_to_transaction_object, objects_to_table_data, update_category_list_based_on_previous_data
 
 def main_window(table_data):
@@ -53,12 +53,15 @@ def add_expense_window(main_win, transaction_category_list, full_transaction_lis
                 transaction_type = 'expense'
                 transaction_title = values['-TITLE-'].strip()
                 transaction_amount = values['-AMOUNT-']
-                full_transaction_list.append(MoneyTransaction(transaction_category, transaction_type, transaction_title, transaction_amount))
-                new_transactions_for_table = objects_to_table_data(full_transaction_list)
-                main_win['-TABLE-'].update(new_transactions_for_table)
-                break
+                validated_data = data_validation(transaction_title, transaction_amount, sg)
+                if validated_data is not None:
+                    full_transaction_list.append(MoneyTransaction(transaction_category, transaction_type, transaction_title, transaction_amount))
+                    new_transactions_for_table = objects_to_table_data(full_transaction_list)
+                    main_win['-TABLE-'].update(new_transactions_for_table)
+                    sg.popup(f'Transaction succesfully added to the table!')
+                    break
             except ValueError as error:
-                sg.popup(f'Amount must be a number: {error}')
+                sg.popup_error(f'Amount must be a number: {error}')
     add_expense_win.close()
 
 def add_income_window(main_win, transaction_category_list, full_transaction_list):
@@ -79,12 +82,15 @@ def add_income_window(main_win, transaction_category_list, full_transaction_list
                 transaction_type = 'income'
                 transaction_title = values['-TITLE-'].strip()
                 transaction_amount = values['-AMOUNT-']
-                full_transaction_list.append(MoneyTransaction(transaction_category, transaction_type, transaction_title, transaction_amount))
-                new_transactions_for_table = objects_to_table_data(full_transaction_list)
-                main_win['-TABLE-'].update(new_transactions_for_table)
-                break
+                validated_data = data_validation(transaction_title, transaction_amount, sg)
+                if validated_data is not None:
+                    full_transaction_list.append(MoneyTransaction(transaction_category, transaction_type, transaction_title, transaction_amount))
+                    new_transactions_for_table = objects_to_table_data(full_transaction_list)
+                    main_win['-TABLE-'].update(new_transactions_for_table)
+                    sg.popup(f'Transaction succesfully added to the table!')
+                    break
             except ValueError as error:
-                sg.popup(f'Amount must be a number: {error}')
+                sg.popup_error(f'Amount must be a number: {error}')
     add_income_win.close()
 
 

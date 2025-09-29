@@ -26,5 +26,15 @@ class MoneyTransaction:
     def __str__(self):
         return f'{self.transaction_category} {self.transaction_type} {self.transaction_title} ${self.transaction_amount:.2f}'
 
+def data_validation(transaction_title, transaction_amount, sg):
+    if not transaction_title:
+        sg.popup_error('Please enter a title')
+        return None
+    amount_float = float(transaction_amount)
+    if amount_float < 0: 
+        sg.popup_error('Amount must be positive')
+        return None
+    return True
+
 
 
