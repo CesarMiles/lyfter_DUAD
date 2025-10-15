@@ -1,4 +1,5 @@
-
+from functools import wraps
+from data_persistance import function_to_open_jsonfile, task_db_update
 # Function to validate states of tasks
 def state_check(request):
     valid_states = ['to do', 'in progress', 'completed']
@@ -22,3 +23,13 @@ def find_task_by_id(task_id, tasks_list):
             if task['id'] == task_id:
                 return index, task
     return None, None
+
+
+def refresh_tasks(func):
+      @wraps(func)
+      def wrapper(*args, **kwargs):
+            updated_tasks = function_to_open_jsonfile()
+            result = func(updated_tasks, *args, **kwargs)
+            task_db_update(updated_tasks)
+            return result
+      return wrapper

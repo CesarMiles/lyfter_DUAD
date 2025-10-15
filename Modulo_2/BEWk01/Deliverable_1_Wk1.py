@@ -1,17 +1,16 @@
 from flask import Flask, request, jsonify
-from data_persistance import task_db_update, function_to_open_jsonfile
-from functions import state_check, task_req_check, find_task_by_id
+from functions import state_check, task_req_check, find_task_by_id, refresh_tasks
 
 app = Flask(__name__)
-tasks = function_to_open_jsonfile()
 
 
 @app.route('/')
 def home():
     return 'Task Manager'
 
-@app.route('/tasks/add_task', methods=['POST'])
-def add_task():
+@app.route('/tasks', methods=['POST'])
+@refresh_tasks
+def add_task(tasks):
     try:
         task_req_check(request)
         state_check(request)
@@ -23,26 +22,27 @@ def add_task():
             'description' : data['description'],
             'state' : data['state']
         })
-        task_db_update(tasks)
-        return jsonify({"message": f"Task {new_id}. {data['title']}, has been added"})
+        return jsonify({"message": f"Task {new_id}. {data['title']}, has been added"}), 201
     except ValueError as e:
         return jsonify(message=str(e)), 400
 
 @app.route('/tasks', methods=['GET'])
-def tasks_view():
+@refresh_tasks
+def tasks_view(tasks):
     filtered_tasks = tasks
     task_filter = request.args.get('state')
     if task_filter:
         filtered_tasks = list(
             filter(lambda task: task['state'] == task_filter, filtered_tasks)
         )
-        return filtered_tasks
+        return jsonify(filtered_tasks)
     if request.method == 'GET':
-        return tasks
+        return jsonify(tasks)
     
 
 @app.route('/tasks/<task_id>', methods=['PUT', 'DELETE'])
-def single_task_view(task_id):
+@refresh_tasks
+def single_task_view(tasks, task_id):
     try:
         task_id_int = int(task_id)
         task_index, task_to_modify = find_task_by_id(task_id_int, tasks)
@@ -59,13 +59,11 @@ def single_task_view(task_id):
                 'description': new_task['description'],
                 'state': new_task['state']
             })
-            task_db_update(tasks)
             return task_to_modify
 
         if request.method == 'DELETE':
             del tasks[task_index]
-            task_db_update(tasks)
-            return jsonify({"message": f"Task {task_id} has been deleted"})
+            return jsonify({"message": f"Task {task_id} has been deleted"}), 204
     
     except ValueError:
         return jsonify({"error": "Task ID must be a number"}), 400
