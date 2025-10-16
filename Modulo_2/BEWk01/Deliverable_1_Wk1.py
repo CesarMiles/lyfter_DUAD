@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from functions import state_check, task_req_check, find_task_by_id, refresh_tasks
+from utils import state_check, task_req_check, find_task_by_id, refresh_tasks
 
 app = Flask(__name__)
 
@@ -40,9 +40,9 @@ def tasks_view(tasks):
         return jsonify(tasks)
     
 
-@app.route('/tasks/<task_id>', methods=['PUT', 'DELETE'])
+@app.route('/tasks/<task_id>', methods=['PUT'])
 @refresh_tasks
-def single_task_view(tasks, task_id):
+def single_task_edit(tasks, task_id):
     try:
         task_id_int = int(task_id)
         task_index, task_to_modify = find_task_by_id(task_id_int, tasks)
@@ -60,6 +60,19 @@ def single_task_view(tasks, task_id):
                 'state': new_task['state']
             })
             return task_to_modify
+    
+    except ValueError:
+        return jsonify({"error": "Task ID must be a number"}), 400
+
+@app.route('/tasks/<task_id>', methods=['DELETE'])
+@refresh_tasks
+def single_task_delete(tasks, task_id):
+    try:
+        task_id_int = int(task_id)
+        task_index, task_to_modify = find_task_by_id(task_id_int, tasks)
+
+        if task_index is None:
+            return jsonify({"error": f'Task with id {task_id} not found'}), 404
 
         if request.method == 'DELETE':
             del tasks[task_index]
@@ -67,8 +80,6 @@ def single_task_view(tasks, task_id):
     
     except ValueError:
         return jsonify({"error": "Task ID must be a number"}), 400
-
-
 
 
 if __name__ == "__main__":

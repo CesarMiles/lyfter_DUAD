@@ -7,7 +7,7 @@ def task_db_update(tasks):
     return print('Database updated')
 
 # Function to open json file 
-def function_to_open_jsonfile():
+def read_tasks_from_file():
     try:
         with open('tasks.json', 'r', encoding='utf-8') as file:  
             tasks_data = json.load(file)
