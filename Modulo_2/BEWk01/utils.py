@@ -1,0 +1,35 @@
+from functools import wraps
+from data_persistance import read_tasks_from_file, task_db_update
+# Function to validate states of tasks
+def state_check(request):
+    valid_states = ['to do', 'in progress', 'completed']
+    if request.json['state'] not in valid_states:
+        raise ValueError('state must be either: to do, in progress, completed')
+
+
+# Function to validate Title, Description and State
+def task_req_check(request):
+    if 'title' not in request.json:
+            raise ValueError('title missing from the body')
+    if 'description' not in request.json:
+            raise ValueError('description missing from the body')
+    if 'state' not in request.json:
+            raise ValueError('state missing from the body')
+    
+
+# Function to find task by id 
+def find_task_by_id(task_id, tasks_list):
+    for index, task in enumerate(tasks_list):
+            if task['id'] == task_id:
+                return index, task
+    return None, None
+
+
+def refresh_tasks(func):
+      @wraps(func)
+      def wrapper(*args, **kwargs):
+            updated_tasks = read_tasks_from_file()
+            result = func(updated_tasks, *args, **kwargs)
+            task_db_update(updated_tasks)
+            return result
+      return wrapper
