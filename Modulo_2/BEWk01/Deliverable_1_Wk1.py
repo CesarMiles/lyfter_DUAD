@@ -81,6 +81,5 @@ def single_task_delete(tasks, task_id):
     except ValueError:
         return jsonify({"error": "Task ID must be a number"}), 400
 
-
 if __name__ == "__main__":
     app.run(host="localhost", debug=True)
