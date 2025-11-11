@@ -50,6 +50,7 @@ class PgManager(DBGenerator):
     def execute_query(self, query, *args):
         self.cursor.execute(query, args)
         self.connection.commit()
+        print('Query executed')
         if self.cursor.description:
             results = self.cursor.fetchall()
             return results
@@ -57,6 +58,7 @@ class PgManager(DBGenerator):
     def execute_many_queries(self, query, data):
         self.cursor.executemany(query, data)
         self.connection.commit()
+        print('Queries executed')
         if self.cursor.description:
             results = self.cursor.fetchall()
             return results

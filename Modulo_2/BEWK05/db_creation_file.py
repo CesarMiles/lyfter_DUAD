@@ -1,7 +1,7 @@
 
 class DBGenerator:
     def __init__(self):
-        self.dbcreation = """create table lyfter_car_rental.customer_car_rental_data (
+        self.user_dbcreation = """create table lyfter_car_rental.customer_car_rental_data (
         user_id SERIAL PRIMARY KEY,
         username VARCHAR(50),
         password VARCHAR(50),
@@ -10,12 +10,38 @@ class DBGenerator:
         date_of_birth DATE,
         account_status VARCHAR(9)
     );"""
+    
+        self.car_dbcreation = """create table lyfter_car_rental.car_data (
+	car_id SERIAL PRIMARY KEY,
+	brand VARCHAR(50),
+	model VARCHAR(50),
+	factory_year INT,
+	car_rental_status VARCHAR(9)
+    );"""
+        
+        self.rental_relation_dbcreation = """create table lyfter_car_rental.rental_information (
+        rental_id SERIAL PRIMARY KEY,
+        car_id INT NOT NULL references lyfter_car_rental.car_data(car_id),
+        user_id INT NOT NULL references lyfter_car_rental.customer_car_rental_data(user_id),
+        rent_request_date DATE not NULL default CURRENT_DATE,
+        rent_start DATE,
+        rent_end DATE,
+        payment_status VARCHAR(10),
+        rent_status VARCHAR(15)
+        );"""
 
-        self.insert_query = """
+        self.user_insert_query = """
         INSERT INTO lyfter_car_rental.customer_car_rental_data 
         (username, password, email, full_name, date_of_birth, account_status) 
         VALUES (%s, %s, %s, %s, %s, %s)
     """
+        
+        self.car_insert_query = """
+        INSERT INTO lyfter_car_rental.car_data 
+        (car_id, brand, model, factory_year, car_rental_status)
+        VALUES (%s, %s, %s, %s, %s)
+    """
+        
         self.users_data = [
             ('bcorey0', 'mI8+%P)8#lb$b/r9', 'bcorey0@gov.uk', 'Bonny Corey', '1955-10-20', 'inactive'),
             ('yblas1', 'zY0>Hg"!UAI?EX\\Y', 'yblas1@prlog.org', 'Yasmeen Blas', '1981-06-23', 'inactive'),
@@ -67,4 +93,57 @@ class DBGenerator:
             ('mmuggach1b', 'dD0+h&KbrX', 'mmuggach1b@illinois.edu', 'Maiga Muggach', '1992-04-26', 'inactive'),
             ('hjotham1c', "mA2'RC2Mc\\R~", 'hjotham1c@blinklist.com', 'Harriot Jotham', '1959-12-07', 'active'),
             ('rhow1d', 'pS0\\)7&%k', 'rhow1d@cisco.com', 'Ross How', '1954-10-23', 'inactive')
+        ]
+
+        self.car_data = [
+            (1, 'Mercedes-Benz', 'SL-Class', 2017, 'avaialble'),
+            (2, 'Acura', 'NSX', 2007, 'avaialble'),
+            (3, 'Chevrolet', 'G-Series 3500', 2014, 'rented'),
+            (4, 'Mercedes-Benz', 'S-Class', 2015, 'avaialble'),
+            (5, 'Chevrolet', 'Camaro', 2015, 'avaialble'),
+            (6, 'Suzuki', 'Daewoo Magnus', 1994, 'avaialble'),
+            (7, 'Ferrari', 'F430', 1992, 'rented'),
+            (8, 'Dodge', 'Ram Van 1500', 1997, 'avaialble'),
+            (9, 'Buick', 'Century', 2002, 'avaialble'),
+            (10, 'Mitsubishi', 'Starion', 1998, 'rented'),
+            (11, 'Honda', 'Element', 2005, 'rented'),
+            (12, 'Pontiac', 'Grand Prix', 2013, 'avaialble'),
+            (13, 'Chevrolet', 'Cavalier', 2016, 'avaialble'),
+            (14, 'Buick', 'Park Avenue', 2010, 'avaialble'),
+            (15, 'Mitsubishi', 'Pajero', 2021, 'avaialble'),
+            (16, 'Nissan', 'Frontier', 1993, 'avaialble'),
+            (17, 'Ford', 'Econoline E350', 2019, 'rented'),
+            (18, 'Ford', 'Crown Victoria', 2004, 'rented'),
+            (19, 'Lexus', 'GX', 2003, 'rented'),
+            (20, 'Acura', 'Integra', 2012, 'avaialble'),
+            (21, 'Ford', 'Crown Victoria', 2015, 'rented'),
+            (22, 'GMC', 'Envoy', 2008, 'avaialble'),
+            (23, 'Volkswagen', 'New Beetle', 2018, 'rented'),
+            (24, 'Pontiac', 'Aztek', 1993, 'rented'),
+            (25, 'Buick', 'Park Avenue', 2025, 'avaialble'),
+            (26, 'Chevrolet', 'Tahoe', 2010, 'avaialble'),
+            (27, 'Nissan', 'Xterra', 2013, 'rented'),
+            (28, 'BMW', '760', 2002, 'avaialble'),
+            (29, 'Lincoln', 'Town Car', 1997, 'avaialble'),
+            (30, 'Saab', '9000', 1995, 'avaialble'),
+            (31, 'Toyota', 'Celica', 2010, 'avaialble'),
+            (32, 'Volkswagen', 'New Beetle', 2005, 'rented'),
+            (33, 'Volvo', '940', 2024, 'avaialble'),
+            (34, 'Pontiac', 'Solstice', 2001, 'rented'),
+            (35, 'Pontiac', 'Bonneville', 1999, 'avaialble'),
+            (36, 'Nissan', 'Sentra', 2019, 'avaialble'),
+            (37, 'Kia', 'Optima', 2005, 'avaialble'),
+            (38, 'Chevrolet', 'Corvette', 2016, 'avaialble'),
+            (39, 'Dodge', 'Neon', 2021, 'avaialble'),
+            (40, 'Pontiac', 'Sunfire', 2005, 'avaialble'),
+            (41, 'Dodge', 'Charger', 1997, 'rented'),
+            (42, 'Lexus', 'IS', 2008, 'avaialble'),
+            (43, 'GMC', 'Suburban 2500', 2010, 'avaialble'),
+            (44, 'Toyota', 'Camry', 2020, 'available'),
+            (45, 'Honda', 'Civic', 2018, 'rented'),
+            (46, 'Ford', 'Mustang', 2022, 'available'),
+            (47, 'BMW', 'X5', 2019, 'rented'),
+            (48, 'Audi', 'A4', 2021, 'available'),
+            (49, 'Tesla', 'Model 3', 2023, 'available'),
+            (50, 'Hyundai', 'Tucson', 2020, 'rented')
         ]
