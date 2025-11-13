@@ -1,10 +1,9 @@
 import psycopg2
-from db_creation_file import DBGenerator
 
 # Class to generate PG Manager with this class we manage the connection, the queries to be executed and we inherit the data to be used to generate the table and insert the data 
-class PgManager(DBGenerator):
+#Remove inheritance since it doesn't share the same capabilities 
+class PgManager:
     def __init__(self, db_name, user, password, host, port=5432):
-        super().__init__()
         self.db_name = db_name
         self.user = user
         self.password = password
@@ -47,8 +46,11 @@ class PgManager(DBGenerator):
             "password": user_record[3],
         }
     
-    def execute_query(self, query, *args):
-        self.cursor.execute(query, args)
+    def execute_query(self, query, args=None):
+        if args:
+            self.cursor.execute(query, args)
+        else:
+            self.cursor.execute(query)
         self.connection.commit()
         print('Query executed')
         if self.cursor.description:
@@ -62,4 +64,5 @@ class PgManager(DBGenerator):
         if self.cursor.description:
             results = self.cursor.fetchall()
             return results
+        
 

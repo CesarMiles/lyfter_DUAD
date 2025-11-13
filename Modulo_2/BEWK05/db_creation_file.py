@@ -1,6 +1,7 @@
 
-class DBGenerator:
+class DataAndQueries:
     def __init__(self):
+
         self.user_dbcreation = """create table lyfter_car_rental.customer_car_rental_data (
         user_id SERIAL PRIMARY KEY,
         username VARCHAR(50),
@@ -34,14 +35,42 @@ class DBGenerator:
         INSERT INTO lyfter_car_rental.customer_car_rental_data 
         (username, password, email, full_name, date_of_birth, account_status) 
         VALUES (%s, %s, %s, %s, %s, %s)
-    """
+        """
         
+        self.modify_user = """
+        UPDATE lyfter_car_rental.customer_car_rental_data
+        SET account_status = 'inactive'
+        WHERE user_id = 52
+        """
+
         self.car_insert_query = """
         INSERT INTO lyfter_car_rental.car_data 
         (car_id, brand, model, factory_year, car_rental_status)
         VALUES (%s, %s, %s, %s, %s)
-    """
-        
+        """
+
+        self.modify_car = """
+        UPDATE lyfter_car_rental.car_data
+        SET car_rental_status = %s
+        WHERE car_id = %s
+        """
+
+        self.rental_insert_query = """
+        INSERT INTO lyfter_car_rental.rental_information 
+        (car_id, user_id, rent_start, rent_end, payment_status, rent_status)
+        VALUES (%s, %s, %s, %s, %s, %s)
+        """
+
+        self.modify_rental = """
+        UPDATE lyfter_car_rental.rental_information
+        SET rent_status = 'completed'
+        WHERE rental_id = %s
+"""
+        self.car_query = """
+        SELECT * FROM lyfter_car_rental.car_data 
+        WHERE car_rental_status = %s
+"""
+
         self.users_data = [
             ('bcorey0', 'mI8+%P)8#lb$b/r9', 'bcorey0@gov.uk', 'Bonny Corey', '1955-10-20', 'inactive'),
             ('yblas1', 'zY0>Hg"!UAI?EX\\Y', 'yblas1@prlog.org', 'Yasmeen Blas', '1981-06-23', 'inactive'),
@@ -147,3 +176,12 @@ class DBGenerator:
             (49, 'Tesla', 'Model 3', 2023, 'available'),
             (50, 'Hyundai', 'Tucson', 2020, 'rented')
         ]
+
+        self.new_user = ('john_user', 'jhon_pass', 'jhon@email.com', 'Jhon Doe', '1997-05-14', 'active')
+
+        self.new_car = (51, 'byd', 'seagul', 2025, 'available')
+
+        self.new_rental = (51, 51, '2025-11-14', '2025-11-30', 'completed', 'pending')
+
+
+
