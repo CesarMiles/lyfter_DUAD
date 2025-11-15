@@ -41,7 +41,7 @@ class PgManager:
     def format_user(self, user_record):
         return {
             "user_id": user_record[0],
-            "user_name": user_record[1],
+            "username": user_record[1],
             "password": user_record[2],
             "email": user_record[3],
             "full_name": user_record[4],
