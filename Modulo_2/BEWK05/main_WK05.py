@@ -1,5 +1,7 @@
 from database_logic import PgManager
 from db_creation_file import DataAndQueries
+from api import ListUsers
+from flask import Flask
 
 # Part 1 - Creating DB on a single script generating mock data. 
 
@@ -46,5 +48,14 @@ data_and_queries = DataAndQueries()
 # pg_manager.execute_query(data_and_queries.modify_rental, (1,))
 
 # Query to select all cars rented
-print(pg_manager.execute_query(data_and_queries.car_query, ('available',)))
+# print(pg_manager.execute_query(data_and_queries.user_query,))
 
+
+
+app = Flask(__name__)
+
+list_users = ListUsers.as_view('list_api')
+app.add_url_rule('/users', view_func=list_users, methods=['GET'])
+
+
+app.run(host='localhost', debug=True)

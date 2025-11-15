@@ -40,10 +40,13 @@ class PgManager:
 
     def format_user(self, user_record):
         return {
-            "id": user_record[0],
-            "full_name": user_record[1],
-            "email": user_record[2],
-            "password": user_record[3],
+            "user_id": user_record[0],
+            "username": user_record[1],
+            "password": user_record[2],
+            "email": user_record[3],
+            "full_name": user_record[4],
+            "date_of_birth": user_record[5],
+            "account_status": user_record[6]
         }
     
     def execute_query(self, query, args=None):
