@@ -76,7 +76,7 @@ create table lyfter_car_rental.car_data (
     );
 
 INSERT INTO lyfter_car_rental.car_data 
-(car_id, brand, model, factory_year, date_of_birth, car_rental_status) 
+(car_id, brand, model, factory_year, car_rental_status) 
 VALUES 
 (1, 'Mercedes-Benz', 'SL-Class', 2017, 'avaialble'),
 (2, 'Acura', 'NSX', 2007, 'avaialble'),
@@ -150,7 +150,7 @@ INSERT INTO lyfter_car_rental.customer_car_rental_data
 -- b. script to add new car to db 
 INSERT INTO lyfter_car_rental.car_data 
         (car_id, brand, model, factory_year, car_rental_status)
-        VALUES ('BYD', 'Seagul', '2025', 'available');
+        VALUES (51, 'BYD', 'Seagul', '2025', 'available');
 
 -- c. script to modify the status of a user
 UPDATE lyfter_car_rental.customer_car_rental_data
@@ -165,7 +165,7 @@ UPDATE lyfter_car_rental.car_data
 -- e. script to add a new rental with user and car rental information 
 INSERT INTO lyfter_car_rental.rental_information 
         (car_id, user_id, rent_start, rent_end, payment_status, rent_status)
-        VALUES (52, 51, '2025-11-15', '2025-11-30', 'completed', 'pending');
+        VALUES (3, 50, '2025-11-15', '2025-11-30', 'completed', 'pending');
 
 -- f script to complete a rental status and change the car to available 
 UPDATE lyfter_car_rental.car_data 

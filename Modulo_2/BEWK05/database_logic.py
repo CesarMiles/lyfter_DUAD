@@ -41,12 +41,33 @@ class PgManager:
     def format_user(self, user_record):
         return {
             "user_id": user_record[0],
-            "username": user_record[1],
+            "user_name": user_record[1],
             "password": user_record[2],
             "email": user_record[3],
             "full_name": user_record[4],
             "date_of_birth": user_record[5],
             "account_status": user_record[6]
+        }
+    
+    def format_car(self, car_record):
+        return {
+            "car_id": car_record[0],
+            "brand": car_record[1],
+            "model": car_record[2],
+            "factory_year": car_record[3],
+            "car_rental_status": car_record[4]
+        }
+    
+    def format_rents(self, rent_record):
+        return {
+            "rental_id": rent_record[0],
+            "car_id": rent_record[1],
+            "user_id": rent_record[2],
+            "rent_request_date": rent_record[3],
+            "rent_start": rent_record[4],
+            "rent_end" : rent_record[5],
+            "payment_status" : rent_record[6],
+            "rent_status" : rent_record[7]
         }
     
     def execute_query(self, query, args=None):
