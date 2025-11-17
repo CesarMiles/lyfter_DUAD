@@ -2,6 +2,7 @@ from flask.views import MethodView
 from flask import Flask, request
 from db_creation_file import DataAndQueries
 from database_logic import PgManager
+from utils import user_creation_req_check, car_creation_req_check, rent_creation_req_check
 
 data_and_queries = DataAndQueries()
 pgmanager = PgManager('postgres', 'postgres', 'pass123', 'localhost')
@@ -56,14 +57,15 @@ class ListCars(MethodView):
             formatted_results = [pgmanager.format_car(result) for result in results] # With format method located on database_logic.py transfor tuple to dictionary for readability
 
             has_active_filters = any(filters.values()) # Value to store TRUE if there are any query parameters from the URL 
-
             if has_active_filters: # Conditional to confirm if queries are stored on filters to start adjusting reults
                 filtered_cars = formatted_results
                 for key, value in filters.items(): #Transforming dictionary list to tuple list to iterate 
                     if value:
-                        if key == 'factory_year' or 'car_id': 
+                        if key == 'factory_year': 
                             value = int(value)
-                        filtered_cars = list(filter(lambda car: car[key] == value, filtered_cars)) # using filter to retrieve only TRUE matchs from lambda function
+                        if key == 'car_id':
+                            value = int(value)
+                        filtered_cars = list(filter(lambda car: str(car[key]).lower() == str(value).lower(), filtered_cars))# using filter to retrieve only TRUE matchs from lambda function
                 return filtered_cars
             
             else:
@@ -96,7 +98,11 @@ class ListRents(MethodView):
                 filtered_rents = formatted_results
                 for key, value  in filters.items():
                     if value:
-                        if key == 'rent_id' or 'car_id' or 'user_id':
+                        if key == 'rent_id':
+                            value = int(value)
+                        if key == 'car_id':
+                            value = int(value)
+                        if key == 'user_id':
                             value = int(value)
                         filtered_rents = list(filter(lambda rent: rent[key] == value, filtered_rents))
                 return filtered_rents
@@ -109,9 +115,35 @@ class ListRents(MethodView):
             return {"error": "Cannot retrieve rents from database"}, 500
 
 
-class CreateCarRentalAPI(MethodView):
+class CreateUserAPI(MethodView):
     def post(self):
-        pass
+        try:
+            user_creation_req_check(request)
+            user_data = request.get_json()
+            pgmanager.execute_query(data_and_queries.user_insert_query, (user_data['username'], user_data['password'], user_data['email'], user_data['full_name'], user_data['date_of_birth'], user_data['account_status']))
+            return {"message": "User entered in database"}, 200
+        except ValueError as e:
+            return {"error" : f'Cannot complete query error: {e}'}, 400
+        
+class CreateCarAPI(MethodView):
+    def post(self):
+        try:
+            car_creation_req_check(request)
+            car_data = request.get_json()
+            pgmanager.execute_query(data_and_queries.car_insert_query,(car_data['car_id'], car_data['brand'], car_data['model'], car_data['factory_year'],car_data['car_rental_status']))
+            return {"message": "Car entered in database"}, 200
+        except ValueError as e:
+            return {"error" : f'Cannot complete query error: {e}'}, 400
+
+class CreateRentAPI(MethodView):
+    def post(self):
+        try:
+            rent_creation_req_check(request)
+            rent_data = request.get_json()
+            pgmanager.execute_query(data_and_queries.rental_insert_query, (rent_data['car_id'], rent_data['user_id'], rent_data['rent_start'], rent_data['rent_end'], rent_data['payment_status'], rent_data['rent_status']))
+            return {"message": "Rent entered in database"}, 200
+        except ValueError as e:
+            return {"error" : f'Cannot complete query error: {e}'}, 400
 
 class MopdifyCarRentalAPI(MethodView):
     def put(self):
