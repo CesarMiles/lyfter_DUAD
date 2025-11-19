@@ -30,7 +30,7 @@ class PgManager:
             print('Error connecting to the data base', error)
             return None
         
-    # This method its to clode the connection to the data base to prevent 
+    # This method its to close the connection to the data base to prevent leaving it open after the usage 
     def close_connection(self):
         if self.cursor:
             self.cursor.close()
@@ -38,6 +38,7 @@ class PgManager:
             self.connection.close()
         print("Connection closed")
 
+    # Function to format the data retrieved from the GET methods specfically for users 
     def format_user(self, user_record):
         return {
             "user_id": user_record[0],
@@ -49,6 +50,7 @@ class PgManager:
             "account_status": user_record[6]
         }
     
+    # Function to format the data retrieved from the GET methods specfically for cars 
     def format_car(self, car_record):
         return {
             "car_id": car_record[0],
@@ -58,6 +60,7 @@ class PgManager:
             "car_rental_status": car_record[4]
         }
     
+    # Function to format the data retrieved from the GET methods specfically for rents 
     def format_rents(self, rent_record):
         return {
             "rental_id": rent_record[0],
@@ -70,23 +73,15 @@ class PgManager:
             "rent_status" : rent_record[7]
         }
     
+    # Function to execute the query using an attribute of query and arguments 
     def execute_query(self, query, args=None):
         if args:
-            self.cursor.execute(query, args)
+            self.cursor.execute(query, args) # Using cursor from psycopg to execute the query with arguments 
         else:
-            self.cursor.execute(query)
-        self.connection.commit()
-        print('Query executed')
-        if self.cursor.description:
+            self.cursor.execute(query) # Using cursor from psycopg to execute the query without arguments such as gets 
+        self.connection.commit() # using commit method from psycopg to save any change on the db
+        print('Query executed') # Printing to confirm query has been executed 
+        if self.cursor.description: # Using desription method to confirm if there was a SELECT operation to then use fetchall
             results = self.cursor.fetchall()
             return results
-        
-    def execute_many_queries(self, query, data):
-        self.cursor.executemany(query, data)
-        self.connection.commit()
-        print('Queries executed')
-        if self.cursor.description:
-            results = self.cursor.fetchall()
-            return results
-        
 

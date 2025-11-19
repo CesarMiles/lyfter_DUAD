@@ -14,8 +14,6 @@ def user_creation_req_check(request):
     
 
 def car_creation_req_check(request):
-    if 'car_id' not in request.json:
-        raise ValueError('car id missing from the body')
     if 'brand' not in request.json:
         raise ValueError('brand missing from the body')
     if 'model' not in request.json:
@@ -38,3 +36,32 @@ def rent_creation_req_check(request):
         raise ValueError('payment status missing from the body')
     if 'rent_status' not in request.json:
         raise ValueError('rent status missing from the body')
+    
+
+def user_modification_check(request):
+    if 'account_status' not in request.json:
+        raise ValueError('account status missing from body')
+    if 'user_id' not in request.json:
+        raise ValueError('user id missing from body')
+
+def car_modification_check(request):
+    if 'car_rental_status' not in request.json:
+        raise ValueError('car rental status missing from body')
+    if 'car_id' not in request.json:
+        raise ValueError('car id missing from body')
+
+def rent_modification_check(request):
+    if 'rental_id' not in request.json:
+        raise ValueError('rental id missing from body')
+    if 'rent_status' not in request.json:
+        raise ValueError('rent status missing from body')
+
+def car_return_check(request):
+    if 'car_id' not in request.json:
+        raise ValueError('car id missing from body')
+    if 'rental_id' not in request.json:
+        raise ValueError('rental id missing from body')
+    
+def past_due_flag_check(request):
+    if 'user_id' not in request.json:
+        raise ValueError('user id missing from body')
