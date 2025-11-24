@@ -4,7 +4,7 @@ from data_persistance import transaction_list_csv_file, csv_file_to_transaction_
 
 def main_window(table_data):
     sg.theme('Dark Purple 7')
-    layout = [[sg.Text('Transaction Table', font=('bold'))],
+    layout = [[sg.Text('                                                             Transaction Table', font=('bold'))],
               [sg.Table(table_data, justification='center', headings=['Category', 'Type', 'Title', 'Amount'], key='-TABLE-', auto_size_columns=False, expand_x=True, expand_y=True),],
               [sg.Button('Add transaction category'), sg.Button('Add expense'), sg.Button('Add income'), sg.Button('Quit')]]
     return sg.Window('Finance Manager', layout, resizable=True, finalize=True)
