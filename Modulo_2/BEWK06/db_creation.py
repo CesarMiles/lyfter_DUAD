@@ -1,5 +1,6 @@
 from sqlalchemy import Table, Column, Integer, String, ForeignKey, SmallInteger, MetaData
 
+# Declaring metadata with default schema used for this deliverable below all tables necessary for the deliverable
 metadata_obj = MetaData(schema="deliverable_wk06")
 
 users_table = Table(

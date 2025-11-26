@@ -2,9 +2,11 @@ from sqlalchemy import create_engine
 from repository import UserRepository, AddressRepository, CarRepository
 from db_creation import users_table, address_table, car_table, metadata_obj
 
+# Connecting with DB 
 DB_URI = 'postgresql://postgres:pass123@localhost:5432/postgres'
 engine = create_engine(DB_URI, echo=True)
 
+# Code to try connection with  and validate or create tables. 
 try:
     connection = engine.connect()
     print('Connection Succesful')
@@ -15,7 +17,7 @@ try:
 except Exception as e:
     print('Connection failed:', e)
 
-
+# Testing for user repository class for create, get all users, modify users.
 with engine.connect() as conn:
     user_repo = UserRepository(conn, users_table)
 
@@ -29,6 +31,7 @@ with engine.connect() as conn:
     rows_update = user_repo.modify(new_user, full_name="Alba Vargas")
     print(f'Rows updated: {rows_update}')
 
+# Testing for address repository class for create, get all addresses, modify addresses.
 with engine.connect() as conn:
     address_repo = AddressRepository(conn, address_table)
 
@@ -42,7 +45,7 @@ with engine.connect() as conn:
     rows_updated = address_repo.modify(new_address, city="Grecia City")
     print(f"Rows updated: {rows_updated}")
 
-
+# Testing for car repository class for create, get all cars, modify cars.
 with engine.connect() as conn:
     car_repo = CarRepository(conn, car_table)
 
