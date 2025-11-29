@@ -1,5 +1,7 @@
 from sqlalchemy import create_engine
-from repository import UserRepository, AddressRepository, CarRepository
+from user_repo import UserRepository
+from address_repo import AddressRepository
+from car_repo import CarRepository
 from db_creation import users_table, address_table, car_table, metadata_obj
 
 # Connecting with DB 
