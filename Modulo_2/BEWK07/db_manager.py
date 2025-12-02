@@ -8,7 +8,7 @@ user_table = Table(
     "users",
     metadata_obj,
     Column("user_id", Integer, primary_key=True),
-    Column("username", String(30), nullable=False),
+    Column("username", String(30), nullable=False, unique=True),
     Column("password", String(30), nullable=False),
     Column("role", String(10), nullable=False)
 )
@@ -28,7 +28,8 @@ invoice_table = Table(
     metadata_obj,
     Column("invoice_id", Integer, primary_key=True),
     Column("user_id", ForeignKey("deliverable_wk07.users.user_id"), nullable=False),
-    Column("total_amount", Integer, nullable=False)
+    Column("total_amount", Integer, nullable=False),
+    Column("invoice_status", String(20), nullable=False)
 )
 
 invoice_details_table = Table(
