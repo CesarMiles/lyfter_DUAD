@@ -1,17 +1,19 @@
 from sqlalchemy import insert, update, delete, select
 from db_manager import user_table
+from models import user_table
 
 class UserRepository:
-    def __init__(self, connection):
-        self.conn = connection
+    def __init__(self, db_manager):
+        self.db_manager = db_manager
         self.table = user_table
     
     # Create method which uses key:value arguments for managing the inserts of data 
     def create(self, **kwargs):
-        stmt = insert(self.table).values(**kwargs).returning(self.table.c.user_id, self.table.c.full_name)
-        result = self.conn.execute(stmt)
-        self.conn.commit()
-        return result.scalar() 
+        with self.db_manager.engine.connect() as conn:
+            stmt = insert(self.table).values(**kwargs).returning(self.table.c.user_id, self.table.c.role)
+            result = conn.execute(stmt)
+            conn.commit()
+            return result.scalar() 
     
     # Modify method using specific user_id  and key:value arguments to modify as required.
     def modify(self, modify_user_id, **kwargs):
