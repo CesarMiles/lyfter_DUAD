@@ -1,5 +1,4 @@
 from sqlalchemy import insert, update, delete, select
-from db_manager import user_table
 from models import user_table
 
 class UserRepository:
@@ -21,10 +20,11 @@ class UserRepository:
             print(f'There are no values to modify.')
             return None
         
-        stmt = update(self.table).where(self.table.c.user_id == modify_user_id).values(**kwargs)
-        result = self.conn.execute(stmt)
-        self.conn.commit()
-        return result.rowcount    
+        with self.db_manager.engine.connect() as conn:
+            stmt = update(self.table).where(self.table.c.user_id == modify_user_id).values(**kwargs)
+            result = conn.execute(stmt)
+            conn.commit()
+            return result.rowcount    
 
     # Delete method which only requires user id for deletion
     def delete(self, user_id_to_delete):
@@ -35,11 +35,21 @@ class UserRepository:
         return 
     
     # Get method to retrieve all users from the table
-    def get_users(self, username, password):
-        stmt = select(self.table).where(user_table.c.username == username).where(user_table.c.password == password)
-        result = self.conn.execute(stmt)
-        users = result.all()
-        if (len(users)==0):
-            return None
-        else:
-            return users[0]
+    def get_user_details(self, user_id):
+        with self.db_manager.engine.connect() as conn:
+            stmt = select(self.table).where(user_table.c.user_id == user_id)
+            result = conn.execute(stmt)
+            users = result.all()
+            if (len(users)==0):
+                return None
+            else:
+                return users[0]
+    
+    def get_user_login(self, username, password):
+        with self.db_manager.engine.connect() as conn:
+            stmt = select(self.table).where(user_table.c.username == username).where(user_table.c.password == password)
+            result = conn.execute(stmt)
+            user = result.all()
+            if (len(user)==0):
+                return None
+            return user[0]

@@ -1,10 +1,9 @@
 from flask import Flask
-from api import RegisterUserAPI
+from user_api import user_api_methods
 
 app = Flask(__name__)
 
-register_user =RegisterUserAPI.as_view('register_user_api')
-app.add_url_rule('/register', view_func=register_user, methods=['POST'])
+user_api_methods(app)
 
 
 app.run(host='localhost', debug=True)

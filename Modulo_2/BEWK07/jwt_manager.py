@@ -17,5 +17,5 @@ class JWTManager:
             decoded = jwt.decode(token, self.secret, algorithms=[self.algorithm])
             return decoded
         except Exception as e:
-            print(e)
+            print(f"Decode error: {type(e).__name__}: {e}")
             return None
