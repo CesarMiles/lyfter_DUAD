@@ -28,11 +28,12 @@ class UserRepository:
 
     # Delete method which only requires user id for deletion
     def delete(self, user_id_to_delete):
-        stmt = delete(self.table).where(self.table.c.user_id == user_id_to_delete)
-        self.conn.execute(stmt)
-        self.conn.commit()
-        print(f'User {user_id_to_delete} has been deleted')
-        return 
+        with self.db_manager.engine.connect() as conn:
+            stmt = delete(self.table).where(self.table.c.user_id == user_id_to_delete)
+            conn.execute(stmt)
+            conn.commit()
+            print(f'User {user_id_to_delete} has been deleted')
+            return 
     
     # Get method to retrieve all users from the table
     def get_user_details(self, user_id):
