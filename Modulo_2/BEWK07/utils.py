@@ -41,3 +41,12 @@ def product_modify_item(data):
     if 'stock' in data:
         kwargs['stock'] = data['stock']
     return kwargs
+
+def purchase_req_checks(request):
+    if 'products' not in request.json:
+        raise ValueError('Products missing from the body')
+    for products in request.json['products']:
+        if 'product_id' not in products:
+            raise ValueError('Products id missing from the body')
+        if 'quantity' not in products:
+            raise ValueError('Quantity id missing from the body')

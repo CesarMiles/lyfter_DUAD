@@ -28,7 +28,7 @@ invoice_table = Table(
     Column("invoice_id", Integer, primary_key=True),
     Column("user_id", ForeignKey("deliverable_wk07.users.user_id"), nullable=False),
     Column("total_amount", Integer, nullable=False),
-    Column("invoice_status", String(20), nullable=False)
+    Column("invoice_status", String(20), nullable=False, server_default='payed')
 )
 
 invoice_details_table = Table(

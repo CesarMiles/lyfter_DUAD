@@ -18,6 +18,12 @@ class ProductRepository:
             stmt = select(self.table)
             result = conn.execute(stmt)
             return result.all()
+        
+    def get_product_by_id(self, product_id):
+        with self.db_manager.engine.connect() as conn:
+            stmt = select(self.table).where(self.table.c.product_id == product_id)
+            result = conn.execute(stmt)
+            return result.mappings().first()
     
     def modify(self, modify_product_id, **kwargs):
         if not kwargs:
