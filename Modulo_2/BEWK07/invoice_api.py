@@ -1,14 +1,15 @@
 from flask.views import MethodView
 from flask import request, jsonify, Response
 from db_manager import DB_Manager
-from jwt_manager import JWTManager
+from jwt_manager import JWTManagerRSA
 from invoice_repo import InvoiceRepository
 from invoice_detail_repo import InvoiceDetailRepository
 from utils import purchase_req_checks
 from product_repo import ProductRepository
+from utils import format_invoices
 
 conn = DB_Manager()
-jwt_manager = JWTManager("superclave", 'HS256')
+jwt_manager = JWTManagerRSA()
 invoice_repo = InvoiceRepository(conn)
 invoice_detail_repo = InvoiceDetailRepository(conn)
 product_repo = ProductRepository(conn)
@@ -73,8 +74,31 @@ class Purchase_Product(MethodView):
             return {"error": f'Database error: {e}'}, 500
     
 
+class GetInvoicedetails(MethodView):
+    def get(self):
+        try:
+            token = request.headers.get('Authorization')
+            if (token is not None):
+                token = token.replace("Bearer ", "")
+                decoded = jwt_manager.decode(token)
+                user_id = decoded["user_id"]
+                invoices = invoice_repo.get(user_id)
+                if len(invoices) == 0 :
+                    return {"message": f"You currently have no invoices"}, 200
+                
+                formatted_invoices = [format_invoices(invoice) for invoice in invoices]
 
+                return formatted_invoices
+            
+            else:
+                return {"message": f"Token is required to perform this action"}, 400
+            
+        except Exception as e:
+            return {"error": f'Database error: {e}'}, 500
 
 def invoice_api_methods(app):
     purchase_product = Purchase_Product.as_view('purchase_api')
     app.add_url_rule('/purchase_product', view_func=purchase_product, methods=['POST'])
+
+    get_invoices = GetInvoicedetails.as_view('get_invoice_api')
+    app.add_url_rule('/my_invoices', view_func=get_invoices, methods=['GET'])

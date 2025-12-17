@@ -32,3 +32,8 @@ class InvoiceRepository:
             print(f'Invoice id {invoice_id_to_delete} has been deleted')
             return 
     
+    def get(self, user_id):
+        with self.db_manager.engine.connect() as conn:
+            stmt = select(self.table).where(self.table.c.user_id == user_id)
+            result = conn.execute(stmt)
+            return result.all()

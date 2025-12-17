@@ -50,3 +50,12 @@ def purchase_req_checks(request):
             raise ValueError('Products id missing from the body')
         if 'quantity' not in products:
             raise ValueError('Quantity id missing from the body')
+        
+
+def format_invoices(invoice_row):
+    return {
+        "invoice_id": invoice_row[0],
+        "user_id": invoice_row[1],
+        "total_amount": invoice_row[2],
+        "invoice_status": invoice_row[3]
+    }

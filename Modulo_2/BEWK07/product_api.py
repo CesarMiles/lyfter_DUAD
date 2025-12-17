@@ -1,13 +1,13 @@
 from flask.views import MethodView
-from flask import request, jsonify, Response
+from flask import request
 from db_manager import DB_Manager
-from jwt_manager import JWTManager
+from jwt_manager import JWTManagerRSA
 from product_repo import ProductRepository
 from utils import admin_check, format_product, product_modify_item
 from user_repo import UserRepository
 
 conn = DB_Manager()
-jwt_manager = JWTManager("superclave", 'HS256')
+jwt_manager = JWTManagerRSA()
 product_repo = ProductRepository(conn)
 user_repo = UserRepository(conn)
 

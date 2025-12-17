@@ -1,12 +1,12 @@
 from flask.views import MethodView
-from flask import request, jsonify, Response
+from flask import request, jsonify
 from db_manager import DB_Manager
-from jwt_manager import JWTManager
+from jwt_manager import JWTManagerRSA
 from user_repo import UserRepository
 from utils import user_modify_items, admin_check
 
 conn = DB_Manager()
-jwt_manager = JWTManager("superclave", 'HS256')
+jwt_manager = JWTManagerRSA()
 user_repo = UserRepository(conn)
 
 class RegisterUser(MethodView):
@@ -55,7 +55,7 @@ class GetUserDetials(MethodView):
                 user = user_repo.get_user_details(user_id)
                 return jsonify(user_id=user_id, username=user[1], role=user[3])
             else:
-                return Response(status=403)
+                return {"message": f"Token is required to perform this action"}, 400
         except Exception as e:
             return {"error": f'Database error: {e}'}, 500
 
