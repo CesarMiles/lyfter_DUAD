@@ -30,6 +30,15 @@ def format_product(product_row):
         "stock": product_row[4]
     }
 
+def format_product_detail(product):
+    return {
+        "pruduct_id": product[0],
+        "product_name": product[1],
+        "product_price": product[2],
+        "entry_date": product[3],
+        "stock": product[4]
+    }
+
 def product_modify_item(data):
     kwargs = {}
     if 'product_name' in data:
@@ -58,4 +67,20 @@ def format_invoices(invoice_row):
         "user_id": invoice_row[1],
         "total_amount": invoice_row[2],
         "invoice_status": invoice_row[3]
+    }
+
+def format_invoice_details(invoice_detail_row):
+    return {
+        "invoice_id": invoice_detail_row[0][0],
+        "total_amount": invoice_detail_row[0][1],
+        "invoice_status": invoice_detail_row[0][2],
+        "items": [format_item(item_row) for item_row in invoice_detail_row]
+    }
+
+def format_item(item_row):
+    return {
+        "product_name": item_row[3],
+        "quantity": item_row[5],
+        "unit_price": item_row[4],
+        "sub_total": item_row[6]
     }

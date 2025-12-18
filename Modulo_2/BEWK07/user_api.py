@@ -9,6 +9,8 @@ conn = DB_Manager()
 jwt_manager = JWTManagerRSA()
 user_repo = UserRepository(conn)
 
+
+# End point to register a new user, this utilizes values username, password and role, after registration token is provided
 class RegisterUser(MethodView):
     def post(self):
         try:
@@ -26,6 +28,7 @@ class RegisterUser(MethodView):
         except Exception as e:
             return {"error": f'Database error: {e}'}, 500
 
+# End point to login this will retrieve token 
 class Login(MethodView):
     def post(self):
         try:
@@ -44,6 +47,8 @@ class Login(MethodView):
         except Exception as e:
             return {"error": f'Database error: {e}'}, 500
 
+
+# End point to retrieve user details, this proivde only the user whose authenticated through token. 
 class GetUserDetials(MethodView):
     def get(self):
         try:
@@ -59,6 +64,7 @@ class GetUserDetials(MethodView):
         except Exception as e:
             return {"error": f'Database error: {e}'}, 500
 
+# End point only available for admins to modify users 
 class ModifyUser(MethodView):
     def patch(self):
         try:
@@ -84,6 +90,7 @@ class ModifyUser(MethodView):
         except Exception as e:
             return {"error": f'Database error: {e}'}, 500
 
+# Endpoint only available for admins to delete users 
 class DeleteUser(MethodView):
     def delete(self):
         try:

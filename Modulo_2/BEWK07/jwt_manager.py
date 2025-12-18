@@ -38,10 +38,10 @@ class JWTManagerRSA:
             )
             return decoded
         except jwt.ExpiredSignatureError:
-            print("[JWT RSA] Token expirado")
+            print("[JWT RSA] Token expired")
             return None
         except jwt.InvalidTokenError as e:
-            print(f"[JWT RSA] Token inválido: {e}")
+            print(f"[JWT RSA] invalid Token : {e}")
             return None
         except Exception as e:
             print(f"[JWT RSA] Decode error: {type(e).__name__}: {e}")

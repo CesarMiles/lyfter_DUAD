@@ -6,14 +6,29 @@ from invoice_repo import InvoiceRepository
 from invoice_detail_repo import InvoiceDetailRepository
 from utils import purchase_req_checks
 from product_repo import ProductRepository
-from utils import format_invoices
+from utils import format_invoices, format_invoice_details
+from invoice_detail_repo import InvoiceDetailRepository
 
 conn = DB_Manager()
 jwt_manager = JWTManagerRSA()
 invoice_repo = InvoiceRepository(conn)
 invoice_detail_repo = InvoiceDetailRepository(conn)
 product_repo = ProductRepository(conn)
+invoice_detail_repo = InvoiceDetailRepository(conn)
 
+# Purchase endpoint this contains the logic to make a purchase, this endpoint will check for stock if available will proceed with purchase and reduce the stock from the db. Format to make the purchase is 
+# {
+#     "products": [
+#         {
+#             "product_id": 4,
+#             "quantity": 1
+#         },
+#         {
+#             "product_id": 3, 
+#             "quantity": 3
+#         }
+#     ]
+# }
 
 class Purchase_Product(MethodView):
     def post(self):
@@ -74,6 +89,7 @@ class Purchase_Product(MethodView):
             return {"error": f'Database error: {e}'}, 500
     
 
+# End point avialable for users and admins to retrive invoices this will provide the details of the invoice based on user id, it also allows for invoice_id specific search to retrieve details of the purchase details. This function only provides user info of their own invoice
 class GetInvoicedetails(MethodView):
     def get(self):
         try:
@@ -85,6 +101,19 @@ class GetInvoicedetails(MethodView):
                 invoices = invoice_repo.get(user_id)
                 if len(invoices) == 0 :
                     return {"message": f"You currently have no invoices"}, 200
+
+                filtered_invoice_id = request.args.get('invoice_id')
+
+                if filtered_invoice_id:
+                    invoice_verification = invoice_repo.belongs_to_user(filtered_invoice_id, user_id)
+                    if not invoice_verification:
+                        return {"error": "Invoice not found on your record"}
+                    
+                    filtered_invoice = invoice_detail_repo.get_invoice_with_details(filtered_invoice_id)
+                    
+                    formatted_filtered_invoices = format_invoice_details(filtered_invoice)
+                    
+                    return formatted_filtered_invoices
                 
                 formatted_invoices = [format_invoices(invoice) for invoice in invoices]
 

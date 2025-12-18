@@ -1,6 +1,7 @@
 from sqlalchemy import insert, update, delete, select
 from models import products_table
 
+# Create, list, modify, delete methods to be used on end points 
 class ProductRepository:
     def __init__(self, db_manager):
         self.db_manager = db_manager
@@ -23,7 +24,7 @@ class ProductRepository:
         with self.db_manager.engine.connect() as conn:
             stmt = select(self.table).where(self.table.c.product_id == product_id)
             result = conn.execute(stmt)
-            return result.mappings().first()
+            return result.first()
     
     def modify(self, modify_product_id, **kwargs):
         if not kwargs:

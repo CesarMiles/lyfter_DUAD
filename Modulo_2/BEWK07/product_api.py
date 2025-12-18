@@ -3,7 +3,7 @@ from flask import request
 from db_manager import DB_Manager
 from jwt_manager import JWTManagerRSA
 from product_repo import ProductRepository
-from utils import admin_check, format_product, product_modify_item
+from utils import admin_check, format_product, product_modify_item, format_product_detail
 from user_repo import UserRepository
 
 conn = DB_Manager()
@@ -11,6 +11,7 @@ jwt_manager = JWTManagerRSA()
 product_repo = ProductRepository(conn)
 user_repo = UserRepository(conn)
 
+# End point to create products, only admin can perform this action 
 class CreateProduct(MethodView):
     def post(self):
         try: 
@@ -32,7 +33,8 @@ class CreateProduct(MethodView):
                 return {"message": f"Token is required to perform this action"}, 400
         except Exception as e:
             return {"error": f'Database error: {e}'}, 500
-        
+
+# Endpoint to list products only admin can perform this action to check on stock 
 class GetProducts(MethodView):
     def get(self):
         try:
@@ -41,6 +43,13 @@ class GetProducts(MethodView):
                 is_admin = admin_check(token, jwt_manager, user_repo)
                 if not is_admin:
                     return {"error": "Admin privileges required"}, 401
+
+                # If query is added to locate product by id process triggers and return details. 
+                filtered_product_id = request.args.get('product_id')
+                if filtered_product_id:
+                    filtered_product = product_repo.get_product_by_id(filtered_product_id)
+                    formatted_filtered_product = format_product_detail(filtered_product)
+                    return formatted_filtered_product
             
                 products = product_repo.get_products()
                 formatted_products = [format_product(product) for product in products]
@@ -51,7 +60,8 @@ class GetProducts(MethodView):
                 return {"message": f"Token is required to perform this action"}, 400
         except Exception as e:
             return {"error": f'Database error: {e}'}, 500
-        
+
+# Modify endpoint only available for admin roles 
 class ModifyProduct(MethodView):
     def patch(self):
         try:
@@ -79,6 +89,7 @@ class ModifyProduct(MethodView):
         except Exception as e:
             return {"error": f'Database error: {e}'}, 500
 
+# Delete end point only available for admin roles 
 class DeleteProduct(MethodView):
     def delete(self):
         try:

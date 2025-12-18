@@ -37,3 +37,12 @@ class InvoiceRepository:
             stmt = select(self.table).where(self.table.c.user_id == user_id)
             result = conn.execute(stmt)
             return result.all()
+    
+    def belongs_to_user(self, invoice_id, user_id):
+        with self.db_manager.engine.connect() as conn:
+            stmt = select(self.table.c.invoice_id).where(
+                (self.table.c.invoice_id == invoice_id) &
+                (self.table.c.user_id == user_id)
+            )
+            result = conn.execute(stmt)
+            return result.first() is not None

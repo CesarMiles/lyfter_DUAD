@@ -46,6 +46,7 @@ class UserRepository:
             else:
                 return users[0]
     
+    # Get method for login
     def get_user_login(self, username, password):
         with self.db_manager.engine.connect() as conn:
             stmt = select(self.table).where(user_table.c.username == username).where(user_table.c.password == password)

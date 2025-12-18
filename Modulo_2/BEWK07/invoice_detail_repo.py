@@ -1,5 +1,5 @@
 from sqlalchemy import insert, update, delete, select
-from models import invoice_details_table
+from models import invoice_details_table, invoice_table, products_table
 
 class InvoiceDetailRepository:
     # Constructor to use connection and table name 
@@ -34,3 +34,18 @@ class InvoiceDetailRepository:
             conn.commit()
             print(f'Item {item_id_to_delete} has been deleted')
             return 
+    
+    # Get that uses joins to generate a specific view of a invoice with the details of its purchase, its used when an users queries for only invoice_id 
+    def get_invoice_with_details(self, invoice_id):
+        with self.db_manager.engine.connect() as conn:
+            stmt = select(
+                invoice_table.c.invoice_id,
+                invoice_table.c.total_amount,
+                invoice_table.c.invoice_status,
+                products_table.c.product_name,
+                products_table.c.product_price,
+                invoice_details_table.c.quantity,
+                (products_table.c.product_price * invoice_details_table.c.quantity).label('subtotal')
+            ).select_from(invoice_table.join(invoice_details_table,invoice_table.c.invoice_id == invoice_details_table.c.invoice_id)).join(products_table, invoice_details_table.c.product_id == products_table.c.product_id).where(invoice_table.c.invoice_id == invoice_id)
+            result = conn.execute(stmt)
+            return result.all()
