@@ -6,7 +6,7 @@ from invoice_repo import InvoiceRepository
 from invoice_detail_repo import InvoiceDetailRepository
 from utils import purchase_req_checks
 from product_repo import ProductRepository
-from utils import format_invoices, format_invoice_details
+from utils import format_invoices, format_invoice_details, user_id_check
 from invoice_detail_repo import InvoiceDetailRepository
 
 conn = DB_Manager()
@@ -37,9 +37,7 @@ class Purchase_Product(MethodView):
             purchase_req_checks(request)
             data = request.get_json()
             if (token is not None):
-                token = token.replace("Bearer ", "")
-                decoded = jwt_manager.decode(token)
-                user_id = decoded["user_id"]
+                user_id = user_id_check(token, jwt_manager)
 
                 processed_items = []
                 total_amount = 0
@@ -95,9 +93,7 @@ class GetInvoicedetails(MethodView):
         try:
             token = request.headers.get('Authorization')
             if (token is not None):
-                token = token.replace("Bearer ", "")
-                decoded = jwt_manager.decode(token)
-                user_id = decoded["user_id"]
+                user_id = user_id_check(token, jwt_manager)
                 invoices = invoice_repo.get(user_id)
                 if len(invoices) == 0 :
                     return {"message": f"You currently have no invoices"}, 200

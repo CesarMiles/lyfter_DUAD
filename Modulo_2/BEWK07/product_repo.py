@@ -24,7 +24,9 @@ class ProductRepository:
         with self.db_manager.engine.connect() as conn:
             stmt = select(self.table).where(self.table.c.product_id == product_id)
             result = conn.execute(stmt)
-            return result.first()
+            row = result.mappings().first()
+        return dict(row) if row else None
+        
     
     def modify(self, modify_product_id, **kwargs):
         if not kwargs:

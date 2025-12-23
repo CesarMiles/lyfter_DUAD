@@ -3,7 +3,7 @@ from flask import request, jsonify
 from db_manager import DB_Manager
 from jwt_manager import JWTManagerRSA
 from user_repo import UserRepository
-from utils import user_modify_items, admin_check
+from utils import user_modify_items, admin_check, user_id_check
 
 conn = DB_Manager()
 jwt_manager = JWTManagerRSA()
@@ -54,9 +54,7 @@ class GetUserDetials(MethodView):
         try:
             token = request.headers.get('Authorization')
             if (token is not None):
-                token = token.replace("Bearer ", "")
-                decoded = jwt_manager.decode(token)
-                user_id = decoded["user_id"]
+                user_id = user_id_check(token, jwt_manager)
                 user = user_repo.get_user_details(user_id)
                 return jsonify(user_id=user_id, username=user[1], role=user[3])
             else:

@@ -20,6 +20,12 @@ def admin_check(token,jwt_manager, user_repo):
         return False
     return True
 
+def user_id_check(token, jwt_manager):
+    token = token.replace("Bearer ", "")
+    decoded = jwt_manager.decode(token)
+    user_id = decoded["user_id"]
+    return user_id
+
 
 def format_product(product_row):
     return {
