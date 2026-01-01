@@ -1,5 +1,6 @@
 from sqlalchemy import insert, update, delete, select
 from models import user_table
+from db_manager import conn
 
 class UserRepository:
     def __init__(self, db_manager):
@@ -55,3 +56,5 @@ class UserRepository:
             if (len(user)==0):
                 return None
             return user[0]
+
+user_repo = UserRepository(conn)

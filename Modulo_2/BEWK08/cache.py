@@ -86,8 +86,8 @@ class CacheManager:
 
 
 cache_manager = CacheManager(
-    host="HostPlaceHolder",
+    host="PLACEHOLDER",
     port=19813,
-    password='PasswordPlaceHolder'
+    password='PLACEHOLDER'
 )
 

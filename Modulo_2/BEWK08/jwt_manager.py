@@ -46,3 +46,6 @@ class JWTManagerRSA:
         except Exception as e:
             print(f"[JWT RSA] Decode error: {type(e).__name__}: {e}")
             return None
+
+
+jwt_manager = JWTManagerRSA()

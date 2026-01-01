@@ -1,14 +1,9 @@
 from flask.views import MethodView
 from flask import request, jsonify
-from db_manager import DB_Manager
-from jwt_manager import JWTManagerRSA
-from user_repo import UserRepository
-from utils import user_modify_items, admin_check, user_id_check
-
-conn = DB_Manager()
-jwt_manager = JWTManagerRSA()
-user_repo = UserRepository(conn)
-
+from jwt_manager import jwt_manager
+from user_repo import user_repo
+from utils import user_modify_items
+from decorators import token_required, admin_required
 
 # End point to register a new user, this utilizes values username, password and role, after registration token is provided
 class RegisterUser(MethodView):
@@ -50,63 +45,49 @@ class Login(MethodView):
 
 # End point to retrieve user details, this proivde only the user whose authenticated through token. 
 class GetUserDetials(MethodView):
+    @token_required
     def get(self):
         try:
-            token = request.headers.get('Authorization')
-            if (token is not None):
-                user_id = user_id_check(token, jwt_manager)
-                user = user_repo.get_user_details(user_id)
-                return jsonify(user_id=user_id, username=user[1], role=user[3])
-            else:
-                return {"message": f"Token is required to perform this action"}, 400
+            user = user_repo.get_user_details(request.user_id)
+            return jsonify(user_id=request.user_id, username=user[1], role=user[3])
+
         except Exception as e:
             return {"error": f'Database error: {e}'}, 500
 
 # End point only available for admins to modify users 
 class ModifyUser(MethodView):
+    @admin_required
     def patch(self):
         try:
-            token = request.headers.get('Authorization')
-            if (token is not None):
-                is_admin = admin_check(token, jwt_manager, user_repo)
-                if not is_admin:
-                    return {"error": "Admin privileges required"}, 401
-                
-                data = request.get_json()
-                if data.get('user_id') == None:
-                    return {"error": "Missing user_id to modify"}, 400
-                user_id_to_modify = data['user_id']
-                items_to_modify = user_modify_items(data)
+            data = request.get_json()
+            if data.get('user_id') == None:
+                return {"error": "Missing user_id to modify"}, 400
+            
+            user_id_to_modify = data['user_id']
+            items_to_modify = user_modify_items(data)
 
-                if not items_to_modify:
-                    return {"error": "No fields to update"}, 400
+            if not items_to_modify:
+                return {"error": "No fields to update"}, 400
                 
-                user_repo.modify(modify_user_id=user_id_to_modify,**items_to_modify)
-                return {"message": f"User {user_id_to_modify} updated succesfully"}, 200
-            else: 
-                return {"message": f"Token is required to perform this action"}, 400
+            user_repo.modify(modify_user_id=user_id_to_modify,**items_to_modify)
+            return {"message": f"User {user_id_to_modify} updated succesfully"}, 200
+        
         except Exception as e:
             return {"error": f'Database error: {e}'}, 500
 
 # Endpoint only available for admins to delete users 
 class DeleteUser(MethodView):
+    @admin_required
     def delete(self):
         try:
-            token = request.headers.get('Authorization')
-            if (token is not None):
-                is_admin = admin_check(token, jwt_manager, user_repo)
-                if not is_admin:
-                    return {"error": "Admin privileges required"}, 401
-        
-                data = request.get_json()
-                if data.get('user_id') == None:
-                    return {"error": "Missing user_id to delete"}, 400
-                
-                user_id_to_delete = data['user_id']
-                user_repo.delete(user_id_to_delete)
-                return {"message": f"User {user_id_to_delete} deleted succesfully"}, 200
-            else: 
-                return {"message": f"Token is required to perform this action"}, 400
+            data = request.get_json()
+            if data.get('user_id') == None:
+                return {"error": "Missing user_id to delete"}, 400
+            
+            user_id_to_delete = data['user_id']
+            user_repo.delete(user_id_to_delete)
+            return {"message": f"User {user_id_to_delete} deleted succesfully"}, 200
+            
     
         except Exception as e:
             return {"error": f'Database error: {e}'}, 500

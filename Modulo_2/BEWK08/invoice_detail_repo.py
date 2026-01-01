@@ -1,5 +1,6 @@
 from sqlalchemy import insert, update, delete, select
 from models import invoice_details_table, invoice_table, products_table
+from db_manager import conn
 
 class InvoiceDetailRepository:
     # Constructor to use connection and table name 
@@ -49,3 +50,5 @@ class InvoiceDetailRepository:
             ).select_from(invoice_table.join(invoice_details_table,invoice_table.c.invoice_id == invoice_details_table.c.invoice_id)).join(products_table, invoice_details_table.c.product_id == products_table.c.product_id).where(invoice_table.c.invoice_id == invoice_id)
             result = conn.execute(stmt)
             return result.all()
+
+invoice_detail_repo = InvoiceDetailRepository(conn)

@@ -1,5 +1,6 @@
 from sqlalchemy import insert, update, delete, select
 from models import products_table
+from db_manager import conn
 
 # Create, list, modify, delete methods to be used on end points 
 class ProductRepository:
@@ -45,3 +46,5 @@ class ProductRepository:
             conn.commit()
             print(f'User {product_id_to_delete} has been deleted')
             return 
+
+product_repo = ProductRepository(conn)

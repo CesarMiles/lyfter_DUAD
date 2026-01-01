@@ -1,5 +1,6 @@
 from sqlalchemy import insert, update, delete, select
 from models import invoice_table
+from db_manager import conn
 
 class InvoiceRepository:
     def __init__(self, db_manager):
@@ -46,3 +47,5 @@ class InvoiceRepository:
             )
             result = conn.execute(stmt)
             return result.first() is not None
+
+invoice_repo = InvoiceRepository(conn)
