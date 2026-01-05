@@ -1,6 +1,10 @@
 
-def user_id_check(token, jwt_manager):
-    token = token.replace("Bearer ", "")
-    decoded = jwt_manager.decode(token)
-    user_id = decoded["user_id"]
-    return user_id
+def user_modify_items(data):
+    kwargs = {}
+    if 'email' in data:
+        kwargs['email'] = data['email']
+    if 'password' in data:
+        kwargs['password'] = data['password']
+    if 'role' in data:
+        kwargs['role'] = data['role']
+    return kwargs
