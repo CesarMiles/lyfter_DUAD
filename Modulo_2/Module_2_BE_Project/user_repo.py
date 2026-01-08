@@ -33,7 +33,6 @@ class UserRepository:
             stmt = delete(self.table).where(self.table.c.user_id == user_id_to_delete)
             conn.execute(stmt)
             conn.commit()
-            print(f'User {user_id_to_delete} has been deleted')
             return 
     
     # Get method to retrieve all users from the table
