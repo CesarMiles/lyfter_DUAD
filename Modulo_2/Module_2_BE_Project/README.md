@@ -66,16 +66,9 @@ python -m pytest tests/tests.py -v
 
 ### Database
 ## ER Diagram
+![Database ER Diagram](docs/images/ER_Diagram.png)
 
-┌─────────┐     ┌──────────┐     ┌──────────────┐
-│  Users  │─────│ Invoices │─────│Invoice_Detail│
-└─────────┘     └──────────┘     └──────────────┘
-                     │                   │
-                     └───────────────────┘
-                               │
-                         ┌──────────┐
-                         │ Products │
-                         └──────────┘
+*Figure: Database schema showing relationships between Users, Products, Invoices, and Invoice Details tables.*
 
 ## Schema
 - users: id, email, password, role, created_at
