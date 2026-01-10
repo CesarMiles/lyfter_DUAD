@@ -38,6 +38,19 @@ python main.py
 
 ### Purchases
 - POST /purchase_product - Make purchase
+- Purchase endpoint requires this payload to complete purchase. 
+    # {
+    #     "products": [
+    #         {
+    #             "product_id": 4,
+    #             "quantity": 1
+    #         },
+    #         {
+    #             "product_id": 3, 
+    #             "quantity": 3
+    #         }
+    #     ]
+    # }
 
 ### Invoices
 - GET /invoices - My invoices
