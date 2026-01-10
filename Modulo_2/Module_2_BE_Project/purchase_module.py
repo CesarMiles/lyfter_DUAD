@@ -1,10 +1,11 @@
 from flask.views import MethodView
 from flask import request
 from invoice_repo import invoice_repo
-from utils import purchase_req_checks
+from utils import invoice_cache_invalidation, product_cache_invalidation
 from product_repo import product_repo
 from invoice_detail_repo import invoice_detail_repo
 from decorators import token_required
+from cache import cache_manager
 
 class PurchaseProduct(MethodView):
     @token_required
@@ -49,7 +50,6 @@ class PurchaseProduct(MethodView):
             invoice_id = invoice_repo.create_invoice(
                 user_id=request.user_id, 
                 total_amount=total_amount,
-                invoice_status='completed'
             )
             
             if not invoice_id:
@@ -71,6 +71,9 @@ class PurchaseProduct(MethodView):
                 
                 if not updated:
                     print(f"Warning: Failed to update stock for product {item['product_id']}")
+                product_cache_invalidation(cache_manager, item['product_id'])
+            
+            invoice_cache_invalidation(cache_manager, request.user_id)
             
             return {
                 "message": "Purchase completed successfully",

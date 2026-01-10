@@ -2,7 +2,8 @@ from flask.views import MethodView
 from flask import request, jsonify
 from product_repo import product_repo
 from decorators import admin_required, token_required
-from utils import format_product_detail, format_product, product_modify_item
+from utils import format_product_detail, format_product, product_modify_item, product_cache_invalidation
+from cache import cache_manager
 
 # End point to create products, only admin can perform this action 
 class CreateProduct(MethodView):
@@ -28,6 +29,8 @@ class CreateProduct(MethodView):
             if not result:
                 return {"error": "Failed to create product"}, 500
             
+            product_cache_invalidation(cache_manager, result[0])
+
             product_id, product_name = result[0], result[1]
             
             return {
@@ -50,14 +53,25 @@ class GetProducts(MethodView):
                     filtered_product_id = int(filtered_product_id)
                 except ValueError:
                     return {"error": "Product ID must be a number"}, 400
-        
+
+                cache_key = f"product:{filtered_product_id}"
+                cached_product = cache_manager.get_json(cache_key)
+                if cached_product:
+                    return jsonify(cached_product)
+                
                 filtered_product = product_repo.get_product_by_id(filtered_product_id)
                 if not filtered_product:
                     return {"error": "Product not found"}, 404
-            
+
+                cache_manager.store_json(cache_key, filtered_product, time_to_live=600)
                 return format_product_detail(filtered_product), 200
             
+            all_products_cache = cache_manager.get_json("products:all")
+            if all_products_cache:
+                return jsonify(all_products_cache)
+            
             products = product_repo.get_products()
+            cache_manager.store_json("products:all", [format_product(product) for product in products], time_to_live=600)
             return [format_product(product) for product in products], 200
         
         except Exception as e:
@@ -91,7 +105,7 @@ class ModifyProduct(MethodView):
             
             if not updated:
                 return {"error": "Failed to update product"}, 500
-
+            product_cache_invalidation(cache_manager, product_id)
             return {"message" : f'Product {product_id} updated succesfully'}, 200
             
         except Exception as e:
@@ -116,7 +130,7 @@ class DeleteProduct(MethodView):
             
             if not deleted:
                 return {"error": "Failed to delete product"}, 500
-            
+            product_cache_invalidation(cache_manager, product_id)
             return {"message": f"Product {product_id} deleted successfully"}, 200
     
         except Exception as e:

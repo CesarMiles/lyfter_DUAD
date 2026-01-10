@@ -34,6 +34,14 @@ def format_product(product_row):
         "stock": product_row[3]
     }
 
+def format_invoice(invoices):
+    return [{
+                "invoice_id": inv[0],
+                "user_id": inv[1],
+                "total_amount": inv[2],
+                "status": inv[3]
+            } for inv in invoices]
+
 def product_modify_item(data):
     kwargs = {}
     if 'product_name' in data:
@@ -54,3 +62,22 @@ def purchase_req_checks(request):
             raise ValueError('Products id missing from the body')
         if 'quantity' not in products:
             raise ValueError('Quantity id missing from the body')
+
+def user_cache_invalidation(cache_manager, user_id):
+    if cache_manager.get_data(f"users:{user_id}"):
+        cache_manager.delete_data(f"users:{user_id}")
+    return 
+
+def product_cache_invalidation(cache_manager, product_id):
+    if cache_manager.get_data(f"product:{product_id}"):
+        cache_manager.delete_data(f"product:{product_id}")
+    if cache_manager.get_data("products:all"):
+        cache_manager.delete_data("products:all")
+    return 
+
+def invoice_cache_invalidation(cache_manager, user_id):
+    if cache_manager.get_data(f"invoice:{user_id}"):
+        cache_manager.delete_data(f"invoice:{user_id}")
+    if cache_manager.get_data("invoice:all"):
+        cache_manager.delete_data("invoice:all")
+    return 

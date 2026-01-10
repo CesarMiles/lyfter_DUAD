@@ -17,7 +17,6 @@ def token_required(f):
         if not payload or "user_id" not in payload:
             return {"error": "Invalid token"}, 401
         
-        # Adjuntar al request
         request.user_id = payload["user_id"]
         request.user_payload = payload  
         

@@ -3,8 +3,9 @@ from flask import request, jsonify
 from jwt_manager import jwt_manager
 from user_repo import user_repo
 from decorators import token_required
-from utils import user_modify_items
+from utils import user_modify_items, user_cache_invalidation
 from sqlalchemy.exc import IntegrityError
+from cache import cache_manager
 
 
 #Endpoint to register a new user. This will retrieve a token for usage if required.
@@ -44,7 +45,7 @@ class Login(MethodView):
             result = user_repo.user_login(data.get('email'), data.get('password'))
             if result == None:
                 return {"error": "email or password not found"}, 403
-            print(result)
+            
             token = jwt_manager.encode({"user_id":result[0], "role":result[3]})
             return jsonify(token=token), 201
         
@@ -56,7 +57,14 @@ class GetUserDetails(MethodView):
     @token_required
     def get(self):
         try:
+            cache_key = f"users:{request.user_id}"
+            cached_user = cache_manager.get_json(cache_key)
+            print(cached_user)
+            if cached_user:
+                return jsonify(cached_user)
+            
             user = user_repo.get_user_details(request.user_id)
+            cache_manager.store_json(cache_key,{"user_id":request.user_id, "email":user[1], "role":user[3]}, time_to_live=600)
             return jsonify(user_id=request.user_id, email=user[1], role=user[3])
 
         except Exception as e:
@@ -76,6 +84,7 @@ class ModifyUser(MethodView):
                 return {"error": "role cannot be modified"}, 400
             
             user_repo.modify_user(request.user_id, **items_to_modify)
+            user_cache_invalidation(cache_manager, request.user_id)
             return {"message": f"User {request.user_id} updated succesfully"}, 200
         
         except Exception as e:
@@ -90,6 +99,7 @@ class DeleteUser(MethodView):
                 return {"error": "You can only delete your own user"}, 400
             
             user_repo.delete(request.user_id)
+            user_cache_invalidation(cache_manager, request.user_id)
             return {"message": f"User {request.user_id} deleted succesfully"}, 200
             
         except Exception as e:
