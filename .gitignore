@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Keys and credentials
+private_key.pem
+public_key.pem
+credentials.json
+
+# Database files
+*.db
+
+# IDE / Tools
+.claude/
+
+# OS files
+.DS_Store
+.thumbs
+
+# Personal / non-project files
+CV_Resume.md
+LLM_Context_Profile.md
+Test.py
+test.py
+testing.py
