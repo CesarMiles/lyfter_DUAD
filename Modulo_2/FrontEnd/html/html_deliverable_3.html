@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <header>
+        <h1>President Elections 20##</h1>
+        <p>
+            On this form you will be able to enter your personal information 
+            <br />
+            and selection of your vote for presidency.
+        </p>
+    <form action="https://www.nyan.cat/" method="POST">
+        <h1>Personal Information</h1>
+        <p>Please enter your information below </p>
+
+        <label for="full_name">Full Name</label>
+        <br />
+        <input type="text" id="full_name" name="full_name" />
+        <br />
+
+        <label for="email">Email</label>
+        <br />
+        <input type="text" id="email" name="email" />
+        <br />
+
+        <label for="Identification_id">Identification Id</label>
+        <br />
+        <input type="text" id="Identification_id" name="Identification_id" />
+        <br />
+
+        <label for="phone">Phone Number</label>
+        <br />
+        <input type="text" id="phone" name="phone" />
+        <br />
+        <br />
+
+        <label for="candidate">Choose your candidate</label>
+        <br />
+        <select name="candidate" id="candidate">
+        <option hidden>Select one</option>
+        <option value="candidate_#1">Candidato #1</option>
+        <option value="candidate_#2">Candidato #2</option>
+        <option value="candidate_#3">Candidato #3</option>
+        </select>
+        <br />
+        <br />
+        <input type="submit" value="Sent my vote" />
+    </form>
+</html>
