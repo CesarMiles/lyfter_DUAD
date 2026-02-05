@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+  <div class="form-container">
+    <form action="https://www.youtube.com/watch?v=Yl87ClJFVRk" method="POST">
+      <div class="blue-line"></div>
+      <h1>Contact us!</h1>
+      <p>Got something to say? Fire away!</p>
+      
+      <div class="input-container">
+      <label for="first_name">First name *</label>
+      <input type="text" id="first_name" name="firstName" />
+      </div>
+      <br />
+      <div class="input-container">
+      <label for="last_name">Last name *</label>
+      <input type="text" id="last_name" name="lastname" />
+      </div>
+      <br />
+      <div class="input-container email-field">
+      <label for="email">Email *</label>
+      <input type="text" id="email" name="email" />
+      <i class="glyphicon glyphicon-envelope"></i>
+      </div>
+      <br />
+      <div class="input-container">
+      <label for="type">What's your message about?</label>
+      <select name="type" id="type">
+        <option hidden> </option>
+        <option value="question">Question</option>
+        <option value="suggestion">Suggestion</option>
+      </select>
+      </div>
+      <br />
+      <div class="input-container horizontal">
+      <label for="message">Fire away!</label>
+      <textarea id="message" name="message"></textarea>
+      </div>
+      <br />
+      <input type="submit" value="Send my message" class="btn-primary"/>
+      <br />
+      <footer class="footer">
+      <p>Powered by <strong>Cesar Miles</strong></p>
+</footer>
+    </form>
+  </div>
+  </body>
+</html>
