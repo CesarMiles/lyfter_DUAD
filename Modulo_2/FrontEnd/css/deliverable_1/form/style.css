@@ -1,5 +1,6 @@
 body {
-  background-color: #4158E1 !important;
+  background-color: #4158E1;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .blue-line {
@@ -12,12 +13,10 @@ h1 {
   text-align: left;    
   color: #333;    
   margin-bottom: 20px;    
-  font-family: Arial;
 }
 
 p {
-  color: #6B7280;
-  font-family: Arial, Helvetica, sans-serif;
+  color: #6B7280
 }
 
 .form-container {
@@ -35,7 +34,7 @@ p {
   background-color: #F3F6FA;
   border-radius: 5px;
   color: #6B7280;
-  font-family: Arial, Helvetica, sans-serif;
+  margin-bottom: 15px;
 }
 
 input {
@@ -47,7 +46,7 @@ input {
   position: relative;
 }
 
-.email-field .glyphicon-envelope {
+.email-field i {
   position: absolute;
   right: 15px;
   top: 35%; 
@@ -62,7 +61,6 @@ select {
   padding: 12px 15px;
   font-size: 16px;
   color: #333;
-  font-family: Arial, Helvetica, sans-serif;
   box-sizing: border-box;
   text-align: center;
 }
@@ -89,22 +87,13 @@ select {
   border: transparent;
 }
 
-.btn-primary {
-  background-color: #4761F8;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 15px 30px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  width: 50%;
-  margin-top: 20px;
-  transition: background-color 0.3s;
-}
 
-.btn-primary:hover {
-  background-color: #3446B5;
+.send-button {
+  background-color: #4761F8;
+  width: 40%;
+  padding: 15px;
+  border-radius: 5px;
+  color: white
 }
 
 .footer {
@@ -112,7 +101,6 @@ select {
   padding: 20px 30px;     
   color: #6B7280;      
   font-size: 14px;
-  font-family: Arial, Helvetica, sans-serif;
   margin-top: 30px;       
 }
 
