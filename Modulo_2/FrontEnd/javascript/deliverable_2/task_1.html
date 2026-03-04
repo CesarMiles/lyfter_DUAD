@@ -6,7 +6,7 @@
     <h1>Task 1</h1>
     <div>
       <button id="addItem">Press here to add to the list</button>
-      <ul id="dynamicList"></ul>
+      <ol id="dynamicList"></ol>
     </div>
 
     <div>
@@ -24,7 +24,6 @@
 
       const deleteItemButton = document.querySelector("#deleteItems");
       deleteItemButton.addEventListener("click", () => {
-        const itemList = document.querySelector("#dynamicList")
         while (itemList.hasChildNodes()) {
           itemList.removeChild(itemList.firstChild);
         }
