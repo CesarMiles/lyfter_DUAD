@@ -19,7 +19,7 @@ fs.readFile(__dirname + '/text1.txt', 'utf8', (err, data) => {
     const hiddenMessage = textOneData.filter(word => {
       return textTwoData.includes(word);
     });
-    console.log(hiddenMessage.join(' '));
+    console.log("Hidden Message:", hiddenMessage.join(' '));
     })
   })
 
