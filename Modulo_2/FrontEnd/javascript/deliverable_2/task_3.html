@@ -1,0 +1,72 @@
+<html>
+  <head>
+    <title>Task 3 Deliverable 3 Javascript</title>
+  </head>
+  <body>
+    <h1>Task 3</h1>
+    <div>
+      <form action="https://www.youtube.com/watch?v=uE-1RPDqJAY" method="POST">
+        <p>Please enter your information below </p>
+        <label for="email">Email</label>
+        <br />
+        <input type="text" id="email" name="email" />
+        <br />
+        <label for="password">Passowrd</label>
+        <br />
+        <input type="text" id="password" name="password" />
+        <br />
+        <label for="fullName">Full Name</label>
+        <br />
+        <input type="text" id="fullName" name="fullName" />
+        <br />
+        <label for="isEmployed">Are you employed?</label><br>
+        <input type="radio" id="yes" name="isEmployed" value="YES">
+        <label for="yes">Yes</label><br>
+        <input type="radio" id="no" name="isEmployed" value="NO">
+        <label for="no">No</label><br>
+      </form>
+    </div>
+
+    <script>
+      const form = document.querySelector('form');
+      const radios = document.querySelectorAll('input[name="isEmployed"]');
+
+      radios.forEach(radio => {
+        radio.addEventListener('change', (event) => {
+
+          const existingLabel = document.querySelector('label[for="employer"]');
+          const existingInput = document.querySelector('input[name="employer"]');
+          const existingBr = document.querySelector('.employer-br');
+          
+          if (existingLabel) existingLabel.remove();
+          if (existingInput) existingInput.remove();
+          if (existingBr) existingBr.remove();
+          
+
+          if (event.target.value === "YES") {
+            let newLabel = document.createElement("label");
+            newLabel.textContent = 'Employer';
+            newLabel.htmlFor = 'employer';
+            newLabel.setAttribute('for', 'employer');
+            form.appendChild(newLabel);
+
+            let lineBreakFirst = document.createElement("br");
+            lineBreakFirst.classList.add('employer-br');  
+            form.appendChild(lineBreakFirst); 
+
+            let newInput = document.createElement("input");
+            newInput.type = 'text';
+            newInput.id = 'employer';
+            newInput.name = 'employer';
+            form.appendChild(newInput);
+            
+
+            let lineBreakSecond = document.createElement("br");
+            lineBreakSecond.classList.add('employer-br');  
+            form.appendChild(lineBreakSecond);
+          }
+        })
+      })
+    </script>
+  </body>
+</html>

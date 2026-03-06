@@ -1,0 +1,29 @@
+<html>
+  <head>
+    <title>Task 2 Deliverable 2 Javascript</title>
+  </head>
+  <body>
+    <h1>Task 2</h1>
+    <div>
+      <input type="text" id="itemInput" placeholder="Write here!">
+      <button id="addButton">Save text</button>
+      <p id="newText">You text will appear here </p>
+    </div>
+
+    <script>
+     const input = document.querySelector("#itemInput");
+     const addButton = document.querySelector("#addButton");
+     const text = document.querySelector("#newText");
+
+     addButton.addEventListener("click", () => {
+      if (input.value.trim() !== "") {
+        text.innerHTML = input.value;
+        input.value = "";
+      }
+      else {
+        alert("You need to enter a word");
+      }
+     });
+    </script>
+  </body>
+</html>

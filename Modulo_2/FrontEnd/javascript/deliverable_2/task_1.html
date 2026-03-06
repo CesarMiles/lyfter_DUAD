@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <title>Task 1 Deliverable 2 Javascript</title>
+  </head>
+  <body>
+    <h1>Task 1</h1>
+    <div>
+      <button id="addItem">Press here to add to the list</button>
+      <ol id="dynamicList"></ol>
+    </div>
+
+    <div>
+      <button id="deleteItems">Press here to delete the list</button>
+    </div>
+    <script>
+      const addItemButton = document.querySelector("#addItem");
+      const itemList = document.querySelector("#dynamicList");
+
+      addItemButton.addEventListener("click", () => {
+        let newItem = document.createElement("li");
+        newItem.innerText = 'new item';
+        itemList.appendChild(newItem);
+      });
+
+      const deleteItemButton = document.querySelector("#deleteItems");
+      deleteItemButton.addEventListener("click", () => {
+        while (itemList.hasChildNodes()) {
+          itemList.removeChild(itemList.firstChild);
+        }
+      });
+    </script>
+  </body>
+</html>
