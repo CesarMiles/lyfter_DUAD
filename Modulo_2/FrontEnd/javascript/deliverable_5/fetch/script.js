@@ -73,7 +73,7 @@ async function updateUserAddress (id, newAddres) {
       'data' : {
         'address': newAddres
       }};
-      
+
     const response = await fetch(`https://api.restful-api.dev/objects/${id}`, {
       method: 'PATCH',
       headers: {
@@ -83,7 +83,7 @@ async function updateUserAddress (id, newAddres) {
     });
 
     if (response.status === 404) {
-      throw new Error(`HTTP error. Status: ${fetchData.status}, User not found`);
+      throw new Error(`HTTP error. Status: ${response.status}, User not found`);
     };
 
     if (!response.ok) {
@@ -92,7 +92,7 @@ async function updateUserAddress (id, newAddres) {
 
     const data = await response.json();
     console.log(data);
-  } catch {
+  } catch (error) {
     console.error('Error creating post', error)
   }
 }
