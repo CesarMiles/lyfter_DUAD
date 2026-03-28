@@ -92,7 +92,7 @@ async function updateUserAddress (id, newAddres) {
 
     const data = await response.json();
     console.log(data);
-  } catch (error) {
+  } catch (error){
     console.error('Error creating post', error)
   }
 }
