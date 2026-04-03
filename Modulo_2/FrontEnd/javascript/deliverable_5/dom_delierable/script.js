@@ -6,23 +6,27 @@ const addressInput = document.getElementById('address-input')
 const userIdInput = document.getElementById('user-id-input')
 const errorMessage = document.getElementById('error-message')
 
-form.addEventListener('submit', (e) => {
-  
+form.addEventListener('submit', async (e) => {
+  e.preventDefault()
 
   let errors = []
 
   if(nameInput) {
     
-    errors = getSignupFormErrors(nameInput.value, emailInput.value, passwordInput.value, addressInput.value)
+    errors = getSignupFormErrors(nameInput.value, emailInput.value, passwordInput.value, addressInput.value);
+    if (errors.length === 0) {
+      const userId = await postUser(nameInput.value, emailInput.value, passwordInput.value, addressInput.value);
+      alert(`Your user Id is: ${userId}`);
+      localStorage.setItem('userId', userId)
+    }
   }
   else {
-    errors = getLoginFormErrors(userIdInput.value, passwordInput.value)
-  }
+    errors = getLoginFormErrors(userIdInput.value, passwordInput.value);
+  };
 
   if (errors.length > 0){
-    e.preventDefault()
     errorMessage.innerText = errors.join(". ")
-  }
+  }; 
 })
 
 function getSignupFormErrors(name, email, password, address) {
@@ -72,3 +76,21 @@ allInputs.forEach(input => {
     }
   })
 })
+
+async function postUser(name, email, password, address) {
+  try {
+    const userBody = {
+      'name': name,
+      'data': {
+        'email' : email,
+        'password' : password,
+        'address' : address
+      }
+    };
+
+    const response = await axios.post('https://api.restful-api.dev/objects', userBody);
+    return response.data.id
+  } catch (error) {
+    return error.response.data
+  }
+}
