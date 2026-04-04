@@ -18,10 +18,14 @@ form.addEventListener('submit', async (e) => {
       const userId = await postUser(nameInput.value, emailInput.value, passwordInput.value, addressInput.value);
       alert(`Your user Id is: ${userId}`);
       localStorage.setItem('userId', userId)
+      window.location.href = "home.html";
     }
   }
   else {
     errors = getLoginFormErrors(userIdInput.value, passwordInput.value);
+    if (errors.length === 0) {
+      login(userIdInput.value, passwordInput.value)
+    }
   };
 
   if (errors.length > 0){
@@ -94,3 +98,15 @@ async function postUser(name, email, password, address) {
     return error.response.data
   }
 }
+
+async function login(userId, password) {
+  try {
+    const userData = await axios.get(`https://api.restful-api.dev/objects/${userId}`);
+      if (password === userData.data.data['password']) {
+        localStorage.setItem('userId', userId);
+        window.location.href = "home.html";
+      } else {
+    throw new Error('Incorrect password')
+  }} catch (error) {
+      alert('User id or password incorrect')
+    }}

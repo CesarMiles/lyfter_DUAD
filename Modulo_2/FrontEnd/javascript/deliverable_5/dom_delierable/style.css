@@ -26,6 +26,15 @@ body{
   overflow: hidden;
 }
 
+.home-body {
+  background-image: url(images/background-home.png);
+  --accent-color: #E84040;
+  --base-color: rgba(30, 10, 10, 0.85);
+  --text-color: #F0E0D6;
+  --input-color: #5C2A2A;
+
+}
+
 .wrapper{
   box-sizing: border-box;
   background-color: var(--base-color);
@@ -39,13 +48,19 @@ body{
   justify-content: center;
 }
 
+.home {
+  margin: 0 auto;
+  border-radius: 20px;
+}
+
+
 h1{
   font-size: 3rem;
   font-weight: 900;
   text-transform: uppercase;
 }
 
-form{
+form, .home-container{
   width: min(400px, 100%);
   margin-top: 20px;
   margin-bottom: 50px;
@@ -55,13 +70,13 @@ form{
   gap: 10px;
 }
 
-form > div{
+form > div, .pill{
   width: 100%;
   display: flex;
   justify-content: center;
 }
 
-form label{
+form label, .pill label{
   flex-shrink: 0;
   height: 50px;
   width: 50px;
@@ -73,7 +88,7 @@ form label{
   align-items: center;
 }
 
-form input{
+form input, .pill p, input{
   box-sizing: border-box;
   flex-grow: 1;
   min-width: 0;
@@ -86,13 +101,14 @@ form input{
   border-left: none;
   background-color: var(--input-color);
   transition: 150ms ease;
+  text-align: center
 }
 
-form input:hover{
+form input:hover, input:hover{
   border: 2px solid var(--accent-color);
 }
 
-form input:focus{
+form input:focus, input:focus{
   outline: none;
   border-color: var(--text-color);
 }
@@ -101,11 +117,11 @@ div:has(input:focus) > label{
   background-color: var(--text-color);
 }
 
-form input::placeholder{
+form input::placeholder, input::placeholder{
   color: var(--text-color);
 }
 
-form button{
+button{
   margin-top: 10px;
   border: none;
   border-radius: 1000px;
