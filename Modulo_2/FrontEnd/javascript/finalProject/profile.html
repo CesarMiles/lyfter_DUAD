@@ -5,19 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
   <title>User Profile</title>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script type="text/javascript" src="javascript/api.js" defer></script>
+  <script type="text/javascript" src="javascript/profile.js" defer></script>
 </head>
 <body>
   <nav class="navbar">
     <div class="logo"><img src="images/pokeball-pokemon-svgrepo-com.svg" width="40" height="40" alt="PokeStore logo"></div>
     <div class="card-text">
         <img src="images/pokemon-trainer-pokemon-svgrepo-com.svg" width="20" alt="pokemon trainer">
-      <p id="user-email">Hello 'user-email'</p>
+      <p id="user-email"></p>
     </div>
     <div class="login">
-      <a href="login.html">
-        <img src="images/pokemon-trainer-pokemon-svgrepo-com.svg" width="20" alt="pokemon trainer">
-        <span>Password</span>
-      </a>
+        <button type="button" id="logout-btn">Logout</button>
     </div>
   </nav>
   <main>
