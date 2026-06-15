@@ -78,3 +78,17 @@ async function getMe() {
       return { success: false, error: error.message };
   }
 }
+
+async function getProducts() {
+  try {
+    const response = await userInstance.get('/products', authHeader());
+    return {success: true, data: response.data}
+  } catch (error) {
+    if (error.response) {
+      console.log('There was an error', error.response.status, error.response.data);
+    } else {
+      console.log('There was an error', error.message);
+    }
+    return {success: false, error: error.message};
+  }
+}
