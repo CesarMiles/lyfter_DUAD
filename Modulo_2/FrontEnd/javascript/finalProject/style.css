@@ -246,3 +246,7 @@ button, .action-btn {
   justify-content:  space-between;
 }
 
+.shopping-cart {
+  display: grid;
+  grid-template-columns: ;
+}
