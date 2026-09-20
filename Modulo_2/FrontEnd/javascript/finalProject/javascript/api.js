@@ -92,3 +92,21 @@ async function getProducts() {
     return {success: false, error: error.message};
   }
 }
+
+async function changePassword(password) {
+  try {
+    const userBody = {
+      'password' : password
+    }
+
+    const response = await userInstance.patch('/modify_user', userBody, authHeader());
+    return {success: true, data: response.data}
+  } catch (error) {
+    if (error.response) {
+      console.log('There was an error', error.response.status, error.response.data);
+    } else {
+      console.log('There was an error', error.message);
+    }
+    return {success: false, error: error.message};
+  }
+}

@@ -58,7 +58,7 @@ form {
   gap: 10px;
 }
 
-form > div {
+form > div, .pill {
   width: 100%;
   display: flex;
   justify-content: center;
@@ -88,8 +88,9 @@ form > div {
 }
 
 
-.searchBar input, form input, .pill {
+.searchBar input, form input, .pill p, .pill input {
   box-sizing: border-box;
+  margin: 0;
   flex-grow: 1;
   min-width: 0;
   height: 50px;
@@ -103,7 +104,7 @@ form > div {
   text-align: center;
 }
 
-.searchBar label, form label, .pill {
+.searchBar label, form label, .pill label {
   flex-shrink: 0;
   height: 50px;
   width: 50px;
@@ -115,11 +116,11 @@ form > div {
   fill: #E9E9E9;
 }
 
-.searchBar input:hover, form input:hover, .pill:hover {
+.searchBar input:hover, form input:hover, .pill p:hover, .pill input:hover {
   border: 2px solid #A0D0E0;
 }
 
-.searchBar input:focus, form input:focus {
+.searchBar input:focus, form input:focus, .pill input:focus {
   outline: none;
   border-color: #A0D0E0;
 }
@@ -183,6 +184,14 @@ div:has(input:focus) > label{
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
 
 .product-card {
