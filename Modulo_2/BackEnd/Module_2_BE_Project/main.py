@@ -1,11 +1,14 @@
 from flask import Flask
+from flask_cors import CORS
 from user_module import user_api_methods
 from product_module import product_api_methods
 from purchase_module import purchase_api_methods
 from invoice_module import invoice_api_methods
 
 
+
 app = Flask(__name__)
+CORS(app)
 
 user_api_methods(app)
 product_api_methods(app)
