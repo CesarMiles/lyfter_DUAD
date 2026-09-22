@@ -21,8 +21,3 @@ async function userData() {
     window.location.href = "login.html";
   }
 }
-
-logoutButton.addEventListener('click', (e) => {
-  localStorage.removeItem('authToken');
-  window.location.href = "login.html"
-})

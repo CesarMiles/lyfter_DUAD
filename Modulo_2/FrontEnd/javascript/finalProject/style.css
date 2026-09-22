@@ -17,7 +17,7 @@ h1{
   margin: 1rem 0;
 }
 
-p, .products-link, .login {
+p, .products-link, .login, .card-text {
   font-family: inherit;
   font-size: 20pt;
 }
